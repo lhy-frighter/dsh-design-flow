@@ -1,7 +1,7 @@
 {
-  "name": "dsh-oil-ui",
-  "version": "0.3.1",
-  "description": "Oil UI 的 DeepSeek Harness 原生插件，支持自动切换本地安装的 Oil UI Pro",
+  "name": "dsh-design-flow",
+  "version": "0.1.0",
+  "description": "个人 UI 设计工作流插件：ui-design-flow 全流程 + awesome-design-md 素材库 + 子代理评审注入（基于 dsh-oil-ui 骨架）",
   "license": "MIT",
   "author": "oil-oil",
   "repository": {

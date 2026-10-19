@@ -86,10 +86,17 @@ export class DesignWorkbench {
   }
 
   async scopedPath(workspace: string, inputPath: string, allowDotFile = false): Promise<string> {
-    if (!inputPath || !inputPath.trim() || inputPath.includes('\0') || inputPath.includes('\\')) {
+    if (!inputPath || !inputPath.trim() || inputPath.includes('\0')) {
       throw new Error('A valid workspace path is required');
     }
-    const clean = inputPath.trim();
+    // [dsh-design-flow] win32 上反斜杠是合法分隔符（绝对路径必含），归一为 / 再走统一校验；
+    // POSIX 上维持上游禁令（\ 在那里是文件名字符，禁掉防止混淆）。
+    const clean = (process.platform === 'win32'
+      ? inputPath.trim().replace(/\\/g, '/')
+      : inputPath.trim());
+    if (process.platform !== 'win32' && clean.includes('\\')) {
+      throw new Error('A valid workspace path is required');
+    }
     const resolved = isAbsolute(clean) ? resolve(clean) : resolve(workspace, clean);
 
     // Resolve the deepest existing ancestor to verify no symlink escapes the workspace
