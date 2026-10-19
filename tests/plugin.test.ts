@@ -134,16 +134,16 @@ it('registers 5 native Harness tools, validates their schemas and operates direc
     expect([...tools.keys()].sort()).toEqual(
       ['oil_ui_explorer', 'oil_ui_image', 'oil_ui_media', 'oil_ui_shoot', 'oil_ui_skill_status'].sort(),
     );
-    expect([...commands.keys()].sort()).toEqual(['oil-ui-explore', 'oil-ui-review', 'oil-ui-status']);
-    const statusCmd = await commands.get('oil-ui-status')!.handler({
+    expect([...commands.keys()].sort()).toEqual(['design-flow-explore', 'design-flow-review', 'design-flow-status']);
+    const statusCmd = await commands.get('design-flow-status')!.handler({
       agent: exec.agent,
       rawInput: '',
       attachments: [],
       signal: exec.signal,
     });
     expect(statusCmd).toMatchObject({ kind: 'success' });
-    expect(statusCmd.text).toContain('当前生效 Skill：oil-ui（Lite）');
-    const exploreCmd = await commands.get('oil-ui-explore')!.handler({
+    expect(statusCmd.text).toContain('当前生效 Skill：oil-ui');
+    const exploreCmd = await commands.get('design-flow-explore')!.handler({
       agent: exec.agent,
       rawInput: ' Hero landing page',
       attachments: [],
@@ -152,8 +152,8 @@ it('registers 5 native Harness tools, validates their schemas and operates direc
     expect(exploreCmd).toMatchObject({ kind: 'success' });
     expect(followupMessages).toHaveLength(1);
     expect(registration?.name).toBe('oil-ui');
-    expect(prompt).toContain('activeSkillName');
-    expect(prompt).toContain('without restarting');
+    expect(prompt).toContain('load the `design-flow` Skill');
+    expect(prompt).toContain('oil_ui_explorer');
     expect(prompt).not.toContain('ADAPTER.md');
     expect(prompt).not.toContain('shoot.mjs');
     expect(await run('oil_ui_skill_status', {})).toMatchObject({
@@ -250,7 +250,12 @@ it('refreshes the real Harness Skill registry after a local Pro install without 
   try {
     apply(ctx as unknown as Context, { previewPort: 0, preferPro: true });
     await Promise.all(pending);
-    expect(ctx.skills.register).not.toHaveBeenCalled();
+    // [dsh-design-flow] 静态捆绑技能（design-flow/grill-me/react-best-practices）走 register()，
+    // oil-ui 仍走 provider；register 只允许出现这三次。
+    const registeredNames = (ctx.skills.register as ReturnType<typeof vi.fn>).mock.calls.map(
+      (call: unknown[]) => (call[0] as { name: string }).name,
+    );
+    expect(registeredNames.sort()).toEqual(['design-flow', 'grill-me', 'react-best-practices']);
     expect(provider?.name).toBe('oil-ui-provider');
     expect((await registry.list()).map(s => s.name)).toEqual(['oil-ui']);
     const before = await provider!.list({});
@@ -299,7 +304,7 @@ it('refreshes the real Harness Skill registry after a local Pro install without 
   }
 });
 
-it('triggers one-time Pro recommendation once on lite edition and reports cached update notices', async () => {
+it('never performs update checks or one-time Pro recommendations (dsh-design-flow de-networked)', async () => {
   vi.stubEnv('OIL_NO_UPDATE_CHECK', '0');
   const root = await mkdtemp(join(tmpdir(), 'dsh-oil-ui-recommend-'));
   localHome.path = root;
@@ -313,11 +318,10 @@ it('triggers one-time Pro recommendation once on lite edition and reports cached
     );
     const first = await skillStatus(null, { preferPro: false });
     expect(first.edition).toBe('lite');
-    expect(first.recommendOnceTriggered).toBe(true);
-    expect(first.recommendOnceNotice).toContain('Oil UI Pro');
-    expect(first.updateAvailable).toBe(true);
-    expect(first.latestVersion).toBe('99.0.0');
-    expect(first.updateNotice).toContain('Update available');
+    expect(first.recommendOnceTriggered).toBe(false);
+    expect(first.recommendOnceNotice).toBeNull();
+    expect(first.updateAvailable).toBe(false);
+    expect(first.updateNotice).toBeNull();
 
     const second = await skillStatus(null, { preferPro: false });
     expect(second.recommendOnceTriggered).toBe(false);
@@ -375,7 +379,7 @@ it('automatically injects reviewer-manual.md into subagent system prompt and pre
     for (const listener of createdListeners) await listener({ agent: mainAgent });
     expect(mainSections).toHaveLength(0);
     const mainPrompt = renderPrompt(await rootCtx.systemPrompt.assemble({}));
-    expect(mainPrompt).toContain('call oil_ui_skill_status first');
+    expect(mainPrompt).toContain('load the `design-flow` Skill');
     expect(mainPrompt).not.toContain('视觉与交互评审手册');
 
     const subSections: { name: string; order: number; interpolate?: boolean; text: string }[] = [];

@@ -34,8 +34,11 @@
     "assets/readme",
     "cordis.patch.yml",
     "lib",
+    "skills/oil-ui.manifest.json",
     "skills/oil-ui",
-    "skills/oil-ui.manifest.json"
+    "skills/design-flow",
+    "skills/grill-me",
+    "skills/react-best-practices"
   ],
   "dsh": {
     "bundle": {

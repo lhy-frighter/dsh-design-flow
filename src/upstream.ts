@@ -17,6 +17,29 @@ const CHECK_INTERVAL_MS = 600_000;
 const FETCH_TIMEOUT_MS = 2_000;
 
 export const bundledSkillDirectory = fileURLToPath(new URL('../skills/oil-ui', import.meta.url));
+// [dsh-design-flow] 插件自带技能目录：主流程 + grill-me + react-best-practices
+export const designFlowSkillDirectory = fileURLToPath(new URL('../skills/design-flow', import.meta.url));
+
+/** 读取并注册插件自带技能（frontmatter 解析与 loadUpstreamSkill 同一套约定）。 */
+export async function loadBundledSkill(name: string, directory: string): Promise<SkillRegistration> {
+  const path = join(directory, 'SKILL.md');
+  const raw = await readFile(path, 'utf8');
+  const match = /^---\r?\n([\s\S]*?)\r?\n---(?:\r?\n|$)/.exec(raw);
+  if (!match) throw new Error(`Skill frontmatter missing: ${name}`);
+  const data = parse(match[1]!) as Record<string, unknown>;
+  const content = raw.slice(match[0].length);
+  return {
+    // [dsh-design-flow] 注册名用调用方给定的规范名（react-best-practices 的 frontmatter 名是 vercel- 前缀，不用于注册）。
+    name,
+    description: typeof data.description === 'string' ? data.description : '',
+    metadata: (data.metadata ?? undefined) as Record<string, unknown> | undefined,
+    path,
+    source: 'bundled',
+    resourceBase: { kind: 'directory', path: directory },
+    invocation: { modelInvocable: true, userInvocable: true },
+    content,
+  };
+}
 export const skillDirectory = bundledSkillDirectory;
 
 export interface SkillOptions { preferPro?: boolean; proSkillDir?: string; cwd?: string }
@@ -457,7 +480,8 @@ export async function skillStatus(visible?: SkillDefinition | null, options: Ski
   const visibleBase = visible?.resourceBase?.kind === 'directory' ? visible.resourceBase.path : null;
   const effectiveActive = visible && visibleBase && ['oil-ui', 'oil-ui-pro'].includes(visible.name)
     ? { ...active, name: visible.name as ActiveSkill['name'], edition: visible.name === 'oil-ui-pro' ? 'pro' as const : 'lite' as const, directory: visibleBase, sourceDirectory: visible.provider === 'oil-ui-provider' ? active.sourceDirectory : visibleBase } : active;
-  const updateInfo = await checkSkillUpdate(effectiveActive, String(visible?.metadata?.version ?? activeVersion), Boolean(options.update));
+  // [dsh-design-flow] 去联网化：不再核对 ui.oiloil.org 版本、不再写一次性 Pro 推销标记。
+  const updateInfo = { latestVersion: null, updateAvailable: false, updated: false, updateNotice: null };
   if (updateInfo.updated) {
     snapshot = await discoverSkill(options);
     active = snapshot.active;
@@ -469,7 +493,7 @@ export async function skillStatus(visible?: SkillDefinition | null, options: Ski
   const effectiveName = effective?.name ?? active.name;
   const effectiveEdition = effectiveName === 'oil-ui-pro' ? 'pro' : 'lite';
   activeVersion = String(effective?.metadata?.version ?? activeVersion);
-  const recommendInfo = await checkRecommendOnce(effectiveEdition);
+  const recommendInfo = { recommendOnceTriggered: false, recommendOnceNotice: null };
   const imageGenScriptPath = await resolveImageGenScript(options);
   return {
     imageGenAvailable: imageGenScriptPath !== null,
