@@ -28,7 +28,25 @@ description: 为已有桌面/本地应用（Electron 等）或 Web 应用做 UI 
 4. **保留一处有记忆点的视觉表达**，其余服务阅读与操作；动效只解释状态变化，尊重 reduced-motion。
 5. **"完成"的定义**：可运行代码、桌面与手机实际页面、关键状态、审查修复结果——而不是一段设计描述。
 
+## 模式路由（单入口：先选类别，再调分册与底层技能）
+
+本技能是所有 UI 设计需求的**唯一入口**——底层参考技能已从技能表收编（`disable-model-invocation` + `user-invocable: false`，不经 skill 工具、不出现在 / 菜单）。收到设计类请求后先判类别；拿不准就用一次一问确认（2–4 个具体选项+推荐项）。判类别后 **read 下列路径的 SKILL.md 并照其规则适配执行**（路径基于本机 `C:\Users\lhy\.dsh\skills\`）：
+
+| 类别（用户会怎么说） | 底层技能（read 其 SKILL.md） | 配套分册/工具 |
+|---|---|---|
+| 全量重设计/换风格/觉得丑/太模板化（默认主线） | `impeccable\SKILL.md` + `frontend-design\SKILL.md` | 本文档阶段 0–7 全流程 |
+| 落地页/作品集/展示型审美校准 | `taste-skill\SKILL.md`、`design-taste-frontend\SKILL.md` | 阶段 2 参考工程 + design-md 索引（[references/design-md/INDEX.md](references/design-md/INDEX.md)） |
+| 看板/密集后台/多步业务流程 | `ui-ux-pro-max\SKILL.md`（密度/表格/筛选/图表模式检索） | 明确跳过 taste-skill |
+| 细节还是粗糙/不够精致 | `make-interfaces-feel-better\SKILL.md` | 阶段 5 验收口径 |
+| 质量闭环/审查修复 | `impeccable\SKILL.md`（critique/audit/harden/polish 分节）+ `web-design-guidelines\SKILL.md` | 正式复查委派子代理（评审手册已自动注入） |
+| React/Next.js 性能 | react-best-practices（插件自带，技能表内可直接加载） | — |
+| 三方向风格探索对比 | （无需底层技能） | oil_ui_explorer + oil_ui_shoot |
+
+适配纪律：用户偏好最高；一次只有一个阶段的主导者；底层技能规则与本流程冲突时，以本文档的验收口径为准并说明取舍。
+
 ## 可用参考 skills 编排（按阶段调用，源自模板第一节）
+
+> 下表中的本机技能已收编（见模式路由），按表中路径 read 后适配；grill-me / react-best-practices / oil-ui 仍在技能表内可直接加载。
 
 | 环节 | 主导 skill | 具体产出与边界 |
 |---|---|---|
@@ -188,6 +206,6 @@ pnpm `nodeLinker: hoisted` + 幽灵依赖清算 → electron-builder：`asar: fa
 - **references/reference-engineering.md** —— 参考卡/七维拆解/短视频入库规范
 - **references/templates.md** —— 附录 A/B/C 模板
 
-**本机已装、直接按名调度**（不在本插件内，各自独立升级）：impeccable · frontend-design · taste-skill · design-taste-frontend · ui-ux-pro-max · make-interfaces-feel-better · web-design-guidelines
+**已收编的本机技能**（已从技能表隐藏，按「模式路由」表格路径 read 调读；原文件仍在 `~/.dsh/skills/` 独立存在，frontmatter 已标 `disable-model-invocation` + `user-invocable: false`，备份在插件仓库 `.skill-backups/`）：impeccable · frontend-design · taste-skill · design-taste-frontend · ui-ux-pro-max · make-interfaces-feel-better · web-design-guidelines
 
 **由插件工具替代**：原 browser-testing-with-devtools 的运行页面/截图/键盘/控制台检查 → `oil_ui_shoot`。
