@@ -1,6 +1,6 @@
 {
   "name": "dsh-design-flow",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "个人 UI 设计工作流插件：ui-design-flow 全流程 + awesome-design-md 素材库 + 子代理评审注入（基于 dsh-oil-ui 骨架）",
   "license": "MIT",
   "author": "oil-oil",
