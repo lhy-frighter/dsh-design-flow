@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 import { execFileSync, spawnSync } from 'node:child_process'
-import { chmod, lstat, mkdir, mkdtemp, readFile, readdir, rename, rm, stat, writeFile } from 'node:fs/promises'
+import { chmod, copyFile, lstat, mkdir, mkdtemp, readFile, readdir, rename, rm, stat, writeFile } from 'node:fs/promises'
 import os from 'node:os'
 import { publicSkillFiles } from './public-skill-files.mjs'
 import path from 'node:path'
@@ -11,6 +11,10 @@ const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 const packageJson = JSON.parse(await readFile(path.join(root, 'package.json'), 'utf8'))
 const snapshotDirectory = path.join(root, 'skills', 'oil-ui')
 const manifestPath = path.join(root, 'skills', 'oil-ui.manifest.json')
+// [dsh-design-flow] Windows 上 spawn 需要显式 .cmd 后缀
+const winBin = (name) => (process.platform === 'win32' ? name + '.cmd' : name)
+// [dsh-design-flow] Windows GNU tar 把 C: 当远程主机，需 --force-local
+const tarArgs = (args) => (process.platform === 'win32' ? ['--force-local', ...args.map(a => (typeof a === 'string' ? a.replace(/\\/g, '/') : a))] : args)
 const tarEnvironment = { ...process.env, COPYFILE_DISABLE: '1' }
 
 function usage() {
@@ -34,7 +38,8 @@ async function collectFiles(directory, relative = '') {
 
 async function verifyPackageTree(packageDirectory, expectedPaths, gitignoreBytes) {
   const skills = await readdir(path.join(packageDirectory, 'skills'))
-  if (skills.sort().join(',') !== 'oil-ui,oil-ui.manifest.json') throw new Error('Unexpected packaged Skill tree.')
+  // [dsh-design-flow] 允许捆绑的 design-flow / grill-me / react-best-practices；oil-ui 校验保持原样。
+  if (skills.sort().join(',') !== 'design-flow,grill-me,oil-ui,oil-ui.manifest.json,react-best-practices') throw new Error('Unexpected packaged Skill tree.')
   const skillDirectory = path.join(packageDirectory, 'skills', 'oil-ui')
   const actualPaths = (await collectFiles(skillDirectory)).sort()
   const expected = [...expectedPaths].sort()
@@ -48,7 +53,7 @@ async function verifyPackageTree(packageDirectory, expectedPaths, gitignoreBytes
 }
 
 function verifyArchiveHasNoAppleDouble(archivePath) {
-  const entries = execFileSync('tar', ['-tzf', archivePath], {
+  const entries = execFileSync('tar', tarArgs(['-tzf', archivePath]), {
     encoding: 'utf8',
     env: tarEnvironment,
   }).split(/\r?\n/).filter(Boolean)
@@ -63,7 +68,7 @@ async function main() {
     usage()
     return
   }
-  const built = spawnSync('npm', ['run', 'build'], { cwd: root, stdio: 'inherit' })
+  const built = spawnSync(winBin('npm'), ['run', 'build'], { cwd: root, stdio: 'inherit', shell: process.platform === 'win32' })
   if (built.error) throw built.error
   if (built.status !== 0) throw new Error(`Build failed with exit code ${built.status}.`)
   const defaultOutput = path.join(root, '.work', `${packageJson.name}-${packageJson.version}.tgz`)
@@ -83,15 +88,15 @@ async function main() {
   const initialPack = path.join(temporaryDirectory, 'pnpm-pack.tgz')
   const unpackDirectory = path.join(temporaryDirectory, 'unpacked')
   const verifyDirectory = path.join(temporaryDirectory, 'verify')
-  const stagedOutput = path.join(outputDirectory, `.${path.basename(outputPath)}.${process.pid}.tmp`)
+  const stagedOutput = path.join(temporaryDirectory, `staged.${process.pid}.tgz`)
 
   try {
-    const packed = spawnSync('pnpm', ['pack', '--out', initialPack], { cwd: root, stdio: 'inherit' })
+    const packed = spawnSync(winBin('pnpm'), ['pack', '--out', initialPack], { cwd: root, stdio: 'inherit', shell: process.platform === 'win32' })
     if (packed.error) throw packed.error
     if (packed.status !== 0) throw new Error(`pnpm pack failed with exit code ${packed.status}.`)
 
     await mkdir(unpackDirectory, { recursive: true })
-    execFileSync('tar', ['-xzf', initialPack, '-C', unpackDirectory], { stdio: 'inherit', env: tarEnvironment })
+    execFileSync('tar', tarArgs(['-xzf', initialPack, '-C', unpackDirectory]), { stdio: 'inherit', env: tarEnvironment })
     const packageDirectory = path.join(unpackDirectory, 'package')
     const packagedIgnorePath = path.join(packageDirectory, 'skills', 'oil-ui', '.gitignore')
     await mkdir(path.dirname(packagedIgnorePath), { recursive: true })
@@ -103,13 +108,15 @@ async function main() {
     }
     await verifyPackageTree(packageDirectory, expectedPaths, gitignoreBytes)
 
-    execFileSync('tar', ['-czf', stagedOutput, '-C', unpackDirectory, 'package'], { stdio: 'inherit', env: tarEnvironment })
+    execFileSync('tar', tarArgs(['-czf', stagedOutput, '-C', unpackDirectory, 'package']), { stdio: 'inherit', env: tarEnvironment })
     await mkdir(verifyDirectory, { recursive: true })
     const archiveEntries = verifyArchiveHasNoAppleDouble(stagedOutput)
-    execFileSync('tar', ['-xzf', stagedOutput, '-C', verifyDirectory], { stdio: 'inherit', env: tarEnvironment })
+    execFileSync('tar', tarArgs(['-xzf', stagedOutput, '-C', verifyDirectory]), { stdio: 'inherit', env: tarEnvironment })
     await verifyPackageTree(path.join(verifyDirectory, 'package'), expectedPaths, gitignoreBytes)
 
-    await rename(stagedOutput, outputPath)
+    await mkdir(outputDirectory, { recursive: true })
+    await copyFile(stagedOutput, outputPath)
+    await rm(outputPath + '.tmp-copy', { force: true }).catch(() => {})
     process.stdout.write(`Created ${outputPath} with ${expectedPaths.length} oil-ui Skill resources and the original .gitignore; checked ${archiveEntries.length} total archive entries for AppleDouble sidecars.\n`)
   } finally {
     await rm(temporaryDirectory, { recursive: true, force: true }).catch(() => {})
