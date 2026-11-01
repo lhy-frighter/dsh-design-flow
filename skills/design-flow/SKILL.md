@@ -1,211 +1,122 @@
 ---
 name: design-flow
-description: 为已有桌面/本地应用（Electron 等）或 Web 应用做 UI 全量重设计与优化的完备流程。融合《前端 UI 设计：Code Agent 提示词模板》：九个参考 skills 分阶段调度 + 共同输入表 + 模板 A/B + 参考工程（灵感网站/GitHub 项目/参考图资产库/84 份品牌设计系统 DESIGN.md）+ 设计系统落盘 + 程序化验收闭环（css-audit/像素diff/溢出热区对比度审计）+ 打包分发。当用户要求"美化 UI/重设计界面/优化视觉/换风格/做主题/觉得丑/太模板化/打包分发"时使用。
+description: 为 Web、Electron 和应用界面进行设计、重设计与视觉打磨，串联深度需求访谈、Hallmark 设计适配、艺术方向、交互动效/视频技术路由、实现和真实页面评审。适用于美化 UI、换风格、觉得丑、太模板化或想更高级；纯后端和普通文案任务不使用。
+metadata:
+  version: "5.1.0"
 ---
 
-# UI 全量设计与优化流程
+# Design Flow
 
-> **v3.0（#210）** 升级要点：
-> 1. **grill-me 前置**——不再等盘点完才访谈，读完代码/截图的第一件事就是一次一问的方案拷问（见「阶段 0.6」）。上一版把它排在阶段 1，导致实际执行时常被跳过，用户反馈「没有加入方案选择拷问」。
-> 2. **短视频收藏夹素材库**——新增「阶段 2.5 · 短视频素材入库」：抖音/小红书收藏的 UI 视频 → 逐帧截图 → 七维拆解 → 动效/实现形式提取，与截图参考同等待遇。
-> 3. **像素取证**——当 agent 读不了截图（无图像输入模型）时，用 Python/PIL 分析像素定位「顶部被遮住」「右侧抽屉贴边」等视觉问题，而不是凭代码猜。
-> 4. **实战教训入库**——把本仓库真实踩过的坑补进「常见坑表」：写死 `top:70px` 被系统标题栏吞、`.v-center` 的 `min-height:100%` 失效、hover 显形控件审计随机误报等。
+交付符合产品任务、有明确视觉身份、能够运行且有验证证据的界面。按需求深度缩放流程；用户目标、已确认的品牌与参考继承范围优先。可访问性和可用性是设计的一部分。
 
-为**已运行的本地应用**（Electron/Web）做 UI 全量重设计或定向优化。源自用户提供的《前端 UI 设计：Code Agent 提示词模板》，经本项目三轮实战（#181 玻璃层 / #183 五页重构 / #184 收纳密度）沉淀为完备版。核心纪律：
+## 先判断工作深度
 
-1. **一次一问访谈** → 先定系统再改页面；输入表填不了的写"由你提出并注明假设"，别因小空缺停住
-2. **主题覆盖层策略** → 不重写基座，换肤零回归
-3. **截图是唯一验收依据** → "完成"=可运行代码+实际页面+关键状态+审查修复结果，不是设计描述
-4. **参考工程化** → 灵感网站/GitHub 项目/参考 skills/参考图资产库各司其职，不裸奔
-5. **防腐自动化** → css-audit 进测试链、截图像素 diff 建基线、程序化审计 report-only，不靠肉眼
-6. **文档逐次编号沉淀** → 每轮改动带验证数据记入交接文档
-
-## 调度原则（先于一切阶段，源自模板）
-
-1. **一次只有一个阶段的主导者**，其他 skill 负责约束或复核；不要求所有 skill 同时"设计一版"。
-2. **用户偏好最高**：用户的产品目标、参考图、既有品牌规范和明确偏好，高于 skill 默认风格；冲突时说明取舍，别机械平均。
-3. **先锁页面类型**：展示型页面（落地页/作品集）可用 taste-skill 校准审美节奏；数据看板、密集后台、多步业务流程以业务任务、信息架构和可读性优先，不套落地页套路。
-4. **保留一处有记忆点的视觉表达**，其余服务阅读与操作；动效只解释状态变化，尊重 reduced-motion。
-5. **"完成"的定义**：可运行代码、桌面与手机实际页面、关键状态、审查修复结果——而不是一段设计描述。
-
-## 模式路由（单入口：先选类别，再调分册与底层技能）
-
-本技能是所有 UI 设计需求的**唯一入口**——底层参考技能已从技能表收编（`disable-model-invocation` + `user-invocable: false`，不经 skill 工具、不出现在 / 菜单）。收到设计类请求后先判类别；拿不准就用一次一问确认（2–4 个具体选项+推荐项）。判类别后 **read 下列路径的 SKILL.md 并照其规则适配执行**（路径基于本机 `C:\Users\lhy\.dsh\skills\`）：
-
-| 类别（用户会怎么说） | 底层技能（read 其 SKILL.md） | 配套分册/工具 |
-|---|---|---|
-| 全量重设计/换风格/觉得丑/太模板化（默认主线） | `impeccable\SKILL.md` + `frontend-design\SKILL.md` | 本文档阶段 0–7 全流程 |
-| 落地页/作品集/展示型审美校准 | `taste-skill\SKILL.md`、`design-taste-frontend\SKILL.md` | 阶段 2 参考工程 + design-md 索引（[references/design-md/INDEX.md](references/design-md/INDEX.md)） |
-| 看板/密集后台/多步业务流程 | `ui-ux-pro-max\SKILL.md`（密度/表格/筛选/图表模式检索） | 明确跳过 taste-skill |
-| 细节还是粗糙/不够精致 | `make-interfaces-feel-better\SKILL.md` | 阶段 5 验收口径 |
-| 质量闭环/审查修复 | `impeccable\SKILL.md`（critique/audit/harden/polish 分节）+ `web-design-guidelines\SKILL.md` | 正式复查委派子代理（评审手册已自动注入） |
-| React/Next.js 性能 | react-best-practices（插件自带，技能表内可直接加载） | — |
-| 三方向风格探索对比 | （无需底层技能） | oil_ui_explorer + oil_ui_shoot |
-
-适配纪律：用户偏好最高；一次只有一个阶段的主导者；底层技能规则与本流程冲突时，以本文档的验收口径为准并说明取舍。
-
-## 可用参考 skills 编排（按阶段调用，源自模板第一节）
-
-> 下表中的本机技能已收编（见模式路由），按表中路径 read 后适配；grill-me / react-best-practices / oil-ui 仍在技能表内可直接加载。
-
-| 环节 | 主导 skill | 具体产出与边界 |
-|---|---|---|
-| 读 brief、判断产品场景 | **impeccable** `init`/`shape` | 产品目的、用户、任务、约束；已有项目先读代码和设计系统，新项目用 `init` 沉淀长期产品事实 |
-| 需求访谈 | **grill-me**（本插件自带） | 一次一问选择题拷问 8 决策分叉；能查代码的不问用户 |
-| 创意方向 | **frontend-design** | 从产品内容提出 2 个真正不同的方向，各用「核心概念/主视觉/字体色彩/适用理由/潜在代价」五项描述；不以"漂亮"为设计理由 |
-| 落地页审美校准 | **taste-skill** | 仅营销页/作品集/展示型改版参与；数据看板与密集后台明确跳过 |
-| 设计系统检索 | **ui-ux-pro-max** | 按产品类型检索布局/字体/色板/UX 模式与框架建议，整合为少量 tokens，不照搬整套推荐 |
-| 实现后细节打磨 | **make-interfaces-feel-better** | 换行/图标/阴影/圆角/对齐/hover/focus/active/动效/热区；沿用项目已有 CSS 方案 |
-| 两轮质量评审 | **impeccable** `critique`→`audit`/`harden`/`polish` | critique 看层级与表达；audit 查技术质量；harden 查异常状态溢出边界；polish 交付前统一；按已装版本实际命令调用 |
-| 代码规范 | **web-design-guidelines** | 可访问性/响应式/交互规则审查；输出 `文件:行号 → 问题 → 修复` 并修复，不只罗列建议 |
-| React 性能 | **react-best-practices**（本插件自带） | 数据请求/bundle/渲染优化；React/Next.js 项目才按需 |
-| 真实验收 | **oil_ui_shoot**（插件工具） | 运行页面/截图/键盘操作/控制台与运行时检查；多端断点、多状态连拍、录屏抽帧；无工具时如实说明未完成可视验收，不假称看过 |
-
-## 阶段 0 · 盘点与基线
-
-1. 枚举全部 tab/视图/模态/空态，数 CSS 类分布，形成现状矩阵。
-2. 写/更新 **DESIGN.md**：模式定义（Operate 页 vs Read 页）→ 视觉世界 → Tokens 表 → 字/形/影/动 → 反默认自审。
-3. **防腐基线（已工具化，本项目路径）**：
-   - `test/css-audit.cjs`（挂在 package.json 测试链尾）：同文件同作用域内**规则体完全相同**的重复规则 = FAIL（纯复制粘贴腐化，删任一条计算结果不变）；规则体不同 = INFO 层叠覆写（共享组+覆写等有意层叠，report-only）；花括号不平衡 = FAIL；孤儿类 report-only（动态类/主进程注入类误报多，不作断言）。CSS 源覆盖独立 .css 文件 + 组件内联 `<style>` 块。
-   - **截图像素 diff**：`APP_SHOT_BASELINE=1 APP_SHOT=1` 建 `data/shots-baseline/`；此后每次 `APP_SHOT=1` 自动与基线逐 tab 比较（nativeImage.toBitmap() BGRA 原始位图、每通道容差 12），控制台 `DIFF <tab> x.xx%`，汇总写 `shots/diff.json`；尺寸不匹配报 size-mismatch。
-4. 基线截图：`APP_SHOT=1` 遍历 tab 截图（导航匹配用 startsWith；页面签名轮询防旧帧；慢页加长等待）。
-
-## 阶段 0.5 · 共同输入表（模板第二节，访谈前填）
-
-填不了的地方写"由你根据产品用途提出并注明假设"；真正影响产品定位的歧义再问（转 grill-me）。
-
-| 项目 | 要点 |
+| 请求 | 执行路径 |
 |---|---|
-| 项目与目标 | 一句话用途 + 可衡量目标（如"3 分钟内发现异常"） |
-| 页面类型 | 落地页/作品集/Web App/BI 看板/Agent 对话页——决定 taste-skill 是否参与 |
-| 用户与首要任务 | 谁在什么场景做什么，按用户决策顺序 |
-| 关键内容 | 真实标题/字段/示例数字/操作入口；无真实内容标注演示数据 |
-| 必须具备的功能 | 筛选/导出/空载错三态等 |
-| 自己的审美 | 3 个喜欢的形容词 + 3 个明确不要的特征 |
-| 参考资料 | 网址/截图/Figma；明确喜欢哪个局部、哪些不要、允许借用到什么程度 |
-| 品牌与资产 | logo/品牌色/字体/图标；没有则由 agent 提议 |
-| 现有技术 | 仓库路径/框架/CSS 方案/组件库/可用命令 |
-| 边界与验收 | 适配设备/无障碍要求/优先级/交付路径/完成标准 |
+| 新产品、完整重设计、方向模糊 | 阶段 0 → 0.6 深度访谈 → 2 方向探索 → 3–5 实现与验证 |
+| 已有设计系统内新增页面/功能 | 继承现有身份，只补任务、结构、状态与验收；不重新选全站风格 |
+| 已确定高保真设计或明确方向 | 读取约束后直接实现并对照验收，省去重复选方向 |
+| 一处颜色、对齐或间距小改 | 定位 → 修改 → 针对性复核，不启动全套访谈 |
+| 只评审或只讨论方案 | 做到报告或方案为止，不隐含改代码授权 |
 
-## 阶段 0.6 · 方案选择拷问（grill-me，一次一问）
+不把局部打磨变成全站重设计。完整重设计可替换旧视觉系统，不能用不断追加 CSS 覆盖层代替结构整理；延展或打磨则保留既有身份。
 
-**这是 v3.0 的关键改动：grill-me 不是流程中段的访谈，而是读项目后立即执行的第一件事。**
+## 能力与资料：按需读取
 
-历史教训：旧版把 grill-me 排在「阶段 1」，前面还有阶段 0/0.5，实际执行时常常被跳过或压缩成"我自己猜"，导致用户反馈「根本没有方案选择拷问」。正确做法：
+先使用宿主已提供的能力，工具名称并不构成流程前提。完整适配见 [references/agent-portability.md](references/agent-portability.md)。
 
-1. **读完代码与截图后、动手写任何方案前**，立刻进入一次一问的 grill-me（`Skill: grill-me`）。
-2. **一次只问一个问题**，每题给 2–4 个**具体选项 + 推荐项**（可用 `AskUserQuestion` 的 `preview` 字段放 ASCII 示意图）。
-3. **能查代码的不问**——比如"当前有没有主题色""有几个 tab"这类自己去 grep。
-4. **每个决定落盘**：用户回答即写入 `DESIGN.md` 标「访谈定案」，作为后续一切颜色/组件决策的依据。后续阶段的每个分叉点也持续用「一次一问」来确认，而不是攒到最后一次性问。
+- **需求访谈**：读插件自带的 [grill-me](../grill-me/SKILL.md)，需要深入时再读它的题库。若宿主只能加载单个目录，使用便携版 ui-design-flow；临时无法读取时按阶段 0.6 的协议继续。
+- **Hallmark 适配**：开放方向或相关审查时读 [references/hallmark-adapter.md](references/hallmark-adapter.md)，保留用户自有想法与品牌，不强制随机主题。
+- **技术路由**：涉及动效、图形或视频时读 [references/technology-routing.md](references/technology-routing.md)，按需查 [references/motion-catalog.md](references/motion-catalog.md) 与 [references/routing-examples.md](references/routing-examples.md)。
+- **艺术方向与细节**：在确定方向前读 [references/art-direction.md](references/art-direction.md)，实现时按相关章节复核。
+- **参考采集**：[references/inspiration-matrix.md](references/inspiration-matrix.md)；用户提供图/视频时读 [references/reference-engineering.md](references/reference-engineering.md)。
+- **专项扩展**：原生转场/滚动、Rive、数据可视化、React 三维或轻量 shader 需求读 [references/technology-extensions.md](references/technology-extensions.md)；资产依赖和复杂效果读 [references/asset-and-performance.md](references/asset-and-performance.md)。
+- **实际评审**：读 [references/reviewer-manual.md](references/reviewer-manual.md)，用同一标准检查并修复。
+- **交接模板**：[references/templates.md](references/templates.md)；研究依据与采用边界见 [references/sources.md](references/sources.md)。
 
-必问顺序（从 8 个决策分叉中挑最影响当前目标的 3–5 个先问，不必一次问完 8 个）：
-① 风格关系（推翻/在框架内做深/只修细节）→ ② 卡片层次（阴影分层/边框辅助）→ ③ 内容密度 → ④ 半屏页面（内容居中/补内容/大留白）→ ⑤ 页面范围（只改问题页/全部/先定风格再铺开）→ ⑥ WebGL 范围 → ⑦ 沉浸页质感 → ⑧ 字体。
+已安装的 impeccable、frontend-design、ui-ux-pro-max、taste-skill、make-interfaces-feel-better、web-design-guidelines 都是可选补充。使用前检查真实路径与版本，按当前问题只读一份相关内容；没有安装时依本技能继续，不自动安装、不修改其他 skills 的发现策略。React/Next.js 性能问题才按需读取同级 react-best-practices。
 
-## 阶段 1 · 8 个决策分叉明细（grill-me 题库）
+## 阶段 0 · 快速取证与共同输入
 
-**已在阶段 0.6 前置执行**。这里列出完整题库（每个分叉一次一问、每问 2–4 个具体选项 + 推荐项；能查代码的不问）：① 风格关系 ② 封面/视觉锚点 ③ WebGL 动效范围（同时确认 GPU 争用方+降级路径）④ 字体 ⑤ 游戏化 ⑥ 范围节奏 ⑦ 沉浸页质感 ⑧ 密度。结论写入 DESIGN.md 标注「访谈定案」，作为后续一切颜色/组件决策的依据。
+读取项目规范、DESIGN.md、代表页面/组件/资产与启动命令；能运行时查看当前界面和关键状态。优先检查最相关的几页，避免访谈前穷举整个应用。新建 DESIGN.md 前先确认已有同用途文件，不覆盖既有规范。
 
-## 阶段 2 · 参考工程（灵感采集与拆解）
+填紧凑 brief：产品与目标、主要用户与使用场景、核心任务、页面范围、真实内容、保留项、品牌/参考/否定项、技术和设备约束、成功标准。分清已有事实、用户决定、agent 建议、待答与暂定假设。
 
-> 详细手法在两个分册里：灵感源矩阵与 GitHub 挖掘法见 [references/inspiration-matrix.md](references/inspiration-matrix.md)（含本插件自带的 84 份品牌 DESIGN.md 离线库 [references/design-md/INDEX.md](references/design-md/INDEX.md)）；参考卡入库、七维拆解与短视频素材入库见 [references/reference-engineering.md](references/reference-engineering.md)。
+先记录现状与一组代表性基线；全面重设计列受影响页面和状态，局部改动只记录相关区域。没有项目专属 APP_SHOT、css-audit 等脚本时，用现有浏览器与构建工具，不假设这些脚本存在。截图和测试输出放项目既有目录或本次工作目录。
 
-### 2.4 收敛产出
+## 阶段 0.6 / 1 · Grill-me：先问会改变结果的决定
 
-写代码前输出紧凑「继承—改造—舍弃」对照表 + **5 个明确决定**：主视觉、字体层级、色彩角色、内容密度、交互节奏。写进 DESIGN.md。
+按同级 grill-me 执行。核心顺序：**为什么改、为谁改 → 用户任务与成功标准 → 范围和不可改项 → 信息结构与状态 → 视觉方向与验收**。阴影、WebGL、字体品牌不是开场必问题。
 
-## 阶段 2.5 · 短视频收藏夹素材入库（抖音/小红书/视频号）
+默认一次一个高影响问题，给具体场景、2–3 个取舍明确的选项和推荐理由；有需要才对回答追问反例、冲突或压力情境。用户要求集中回答时可合并少量无依赖问题。能查的事实自己查。
 
-收藏的 UI 短视频与静态截图是**同级参考资产**，必须工程化入库（口令→视频/截图→参考卡→七维拆解+动效实现形式提取）。完整流程、获取途径与实战案例见 [references/reference-engineering.md](references/reference-engineering.md)。抓不到就如实说明，不假装拿到。
+工具有结构化提问则用；没有则普通对话。真正影响方向的待答项等待真实回答；可继续的独立取证照常推进。用户授权「你来定」时按 agent 决定记录，不能伪写成用户确认。
 
-## 阶段 3 · 设计系统落盘（先于一切页面改动）
+访谈结束条件是关键决定清楚且没有影响方向的矛盾；不按最低题数打卡。已有完整 brief 不重问。结论合并到 DESIGN.md「访谈定案」，列明假设和待验证项。已有实施授权时直接进入后续工作，不重复设开工确认。
 
-1. **主题覆盖层策略**：新建 theme.css 加载于 styles.css 之后重定义 tokens + 组件视觉 + 新类——不重写基座，400+ 类换肤零回归；分区切换用 body data-attr 或页面类。
-2. **Tokens**：主色/hover/wash/底/表面/墨三级/线条/语义色 + 圆角阶梯（卡/面板/胶囊/hero）+ 阴影两档。
-3. **组件族**：胶囊按钮（primary/secondary/ghost/Done）、区块头（粗标题+灰副标题+查看全部）、筛选 chip（选中=黑底白字）、卡片、圆形图标键（44/68px 两档）、分段控制器（白色滑块 JS 测量跟随）、折叠区块（默认收起+摘要行）。
-4. **液态玻璃**：`.glass/.glass-strong/.glass-dark` = backdrop blur + 半透明 + 内侧高光 + specular 条。**白名单硬约束**（模态/抽屉/侧栏/控制键/hero）；列表滚动内容、正文、语音运行页禁用；`body[data-glass="off"]` 全局降级。
-5. **程序化视觉**：ProcCover（内容 hash→确定性 canvas 纹理）替代缺失插画；HeroCanvas 原生 WebGL（无 three.js）仅一处焦点；自动暂停（reduced-motion/页面隐藏/重任务）+ 失败降级 CSS。
-6. **字体**：拉丁可变字体打包 @font-face（如 Manrope woff2 ~24KB）；中文系统栈回退；数字 tabular-nums；禁止外联字体。
-7. **中文排版细则**：`body { line-break: strict }`（避头尾加强：行首禁现 。，！？；：等收尾标点）；正文行高在各 prose 容器**就地显式声明**（1.6~1.95），不靠继承层统一抬高（防紧凑行被拉高）；数字等宽逐处声明；中西文混排间距待 Chromium text-autospace 稳定后接入（已知边界）。
+## 阶段 2 · 参考工程与方向选择
 
-## 阶段 4 · 结构整合（分层/收纳/转场）
+参考只解决具体设计问题。按任务选择少量匹配的产品流程、实现项目或本地品牌资料，记录来源和观察依据；不按 GitHub 星数判断设计质量，不因一张截图推断隐藏交互。
 
-侧栏（图标+文字、活跃态浅 wash、滑动指示器）→ 页面重组（hero 板 + 提醒 chips 行（有才显示）+ 按需折叠区块，重复导航块删除）→ 深层内容抽屉化（右滑玻璃抽屉 + 遮罩）→ iOS 式全屏态（通话/媒体）→ 方向感知转场（reduced-motion 全关）→ 反馈三件（Toast 玻璃条/确认模态替代 window.confirm/骨架屏）→ hover 统一（业务区中性浅灰，沉浸区纸感加深）。
+当方向确实开放时，提出 **2 个有结构差异的方向**，必要时增加一个探索项。它们应在信息组织、视觉重心或主体表达上有差别，不能只换颜色。每项明确：产品依据、布局示意、字体角色、色彩/材质、记忆点、关键状态、实现成本与不采用的东西。
 
-## 阶段 5 · 截图验收闭环（工具化）
+用相同真实内容做一个首屏或核心组件的低成本对比。先用草图/HTML，图像生成只在确有素材需求且工具可用时参与；不强制生图。让用户决定需要其偏好的分歧；用户已授权自主选择时给理由并继续。
 
-> **两条链路按场景选**：① Electron 项目内置的 `APP_SHOT` 链路（下方 1–5，基线 diff/审计已挂测试链）——项目内改动用它；② 其他项目或在 DSH 内直接巡检 → 用插件工具 **`oil_ui_shoot`**（多端断点/多状态连拍/交互步骤/录屏抽帧/证据拼图，自带溢出/断图/对比度检查），并把「验收口径」作为评审要求；正式复查**委派子代理**按评审手册走查（手册已由插件自动注入子代理，直接派即可）。
+选中后写「方向约定」：概念一句话、适用页面、主次层级、具体 tokens、采用/舍弃的参考维度、否定项、成本和验证方式。先把代表页做好再铺开，避免全站同时改完才发现风格不对。
 
-1. **`APP_SHOT=1`** 每轮产出三样：
-   - **截图**：12 tab + 窄窗复检（今日/词库）→ `data/shots/`
-   - **像素 diff**：对比 `shots-baseline`，控制台 `DIFF <tag> x.xx%`，汇总 `shots/diff.json`（首跑用 `APP_SHOT_BASELINE=1` 建基线；此后 diff 应归零或仅含有意变更）
-   - **程序化审计**：写 `shots/ui-audit.json`，三项 report-only——横向溢出（scrollWidth>clientWidth+1）、点击热区 <32px 计数（含 tag/类名/尺寸）、文本对比度 WCAG 采样（纯文本叶节点限 500；≥24px 或 ≥18.66px 粗体按 3:1，其余 4.5:1；半透明玻璃底穿透到最近不透明实底近似；结果含 cls/ratio/px/txt）。审计数据人审后决定修什么，不自动改。
-2. **注入脚本两条铁律**：① 模板字面量引用外层变量必须 `${JSON.stringify(x)}` 插值（裸 `name` 会落 `window.name`，静默失效）；② **注入脚本内正则禁用 `\d` 类反斜杠转义**——模板字面量会把 `\d` 烤制成字面量 `d`，`[\d.]` 静默变 `[d.]`；颜色解析用逗号切分等无反斜杠写法。
-3. 逐图评审 + 审计数据 → CSS/JSX 迭代 → 重截（diff 归零或仅含有意变更）→ 用户定向反馈（截图+一句话）→ 再迭代。
-4. **验收口径**：双宽度无溢出；空/载/错三态齐备；键盘可达且 focus 圈可见；reduced-motion 降级；玻璃白名单合规；每页最多一个动效焦点；css-audit 0 FAIL；**grill-me 方案拷问已执行且结论已落盘**（阶段 0.6：DESIGN.md 有「访谈定案」条目、`AskUserQuestion` 有用户真实选择记录，不是 agent 自问自答）。
-5. 每轮回归：tsc + vite build + 全量测试链（css-audit 已挂链尾）；文档按 #序号追加（改动+验证数据+待真机复验清单）。
+## 阶段 2.6 · 根据访谈决定选择技术
 
-### 5.5 像素取证（agent 读不了截图时的兜底）
+涉及动效/交互/三维或视频时，先按 technology-routing 分册提取产物、用户控制、变化对象、精确度、环境与降级约束。先判断实时网页与成片视频，再选择技术；明确静态或局部修改可直接沿用现有方案。
 
-当 agent 的模型不支持图像输入（`Read` 图片返回 "Media omitted"）时，**不要停在"我看不到截图"**。用 Python/PIL 对截图做像素分析，仍能定位大量视觉问题：
+将每个关键效果对应到一条访谈决定，记录主方案、备选及未选理由、生命周期、资产/依赖与核查状态、性能目标和退路。写入 DESIGN.md「技术路由」。由 agent 负责选库；只有影响体验/范围的未知项再问用户。先做高风险效果的小样再铺开。依赖 Rive/三维/视频等资产时先确认资产是否可得、能否编辑与分发、运行解码依赖和失败替代；不要选完技术才发现缺素材。
 
-1. **获取尺寸与整体布局**：`PIL.Image.open(path).size`——确认窗口/视口实际宽高（很多"被遮住"问题与视口高度有关）。
-2. **找贴边/被裁**：逐列采样最右侧 30px 的像素——若出现持续深色竖线（`(55-140)` 灰度），是滚动条或抽屉边缘；若最右列是纯白 `(252,252,252)` 且高占比，说明有 `position:fixed; right:0` 面板贴边。
-3. **找半透明/浮层边界**：右侧 1/3 区域按行扫描，检测白占比突变点——能定位 `.panel`、`.drawer-right` 的实际左右边界与是否贴视口底。
-4. **对比两张截图**：`ImageChops.difference(a,b).getbbox()` 给出差异区域；按象限统计差异像素（右上多 → 右上角有变化元素）。
-5. **定位系统标题栏高度**：顶部 0–60px 逐行采样，深色条（`(31,33,31)` 等）结束的 y 就是标题栏底——`position:fixed; top:70px` 的面板若在其下方不远处，视觉上就像"顶部被遮住"。
-6. 结论写成「像素取证：xxx 位于 y≈50 起，紧贴标题栏」，作为修复依据，不要凭猜测改代码。
+CSS/原生 JS → Motion/GSAP → Canvas/WebGL/Three.js 按真实能力需要选择；Remotion/HyperFrames 负责视频编排，Seedance 负责可选生成素材。它们可以分层配合，但不互相冒充，也不一次全装。完整矩阵与实际验证要求见分册。
 
-> 典型案例（#209）：`.panel { top:70px }` 写死，深色模式标题栏高 40px 时面板顶部视觉上被吞。像素取证发现后改为 `top: max(70px, 7vh)` 自适应，实测 1221px 视口下面板顶从 70 → 83px。
+## 阶段 3 · 设计系统与工艺
 
-### 常见坑表（真实踩过）
+读 art-direction 分册，按场景落地而非套固定视觉配方：
 
-| 坑 | 症状 | 解 |
-|---|---|---|
-| executeJavaScript 注入脚本 `name` 落 window.name | 等待/匹配静默失效 | 全部 `${JSON.stringify()}` 插值 |
-| 模板字面量烤制 `\d` 转义 | 注入正则 `[\d.]` 静默变 `[d.]` | 脚本内正则不用反斜杠转义 |
-| executeJavaScript 传 ArrayBuffer+transfer | 消息跨进程变 null | buffer 放消息体，禁 transfer |
-| MessagePortMain 事件参数 | `{data}` 包装 vs 裸值 | 入口归一 |
-| CSS 类腐化（多轮并行编辑） | 同文件重复规则/分支丢失 | css-audit 进测试链 + 截图像素 diff 基线 |
-| 中文 productName | NSIS spawn UNKNOWN | productName ASCII，shortcutName 留中文 |
-| 单实例锁 vs 测试桩/截图钩子 | 秒退 | 清僵尸进程 + electron 桩补 requestSingleInstanceLock |
-| pnpm isolated→hoisted | 幽灵依赖失联、.pnpm 路径失效 | 声明依赖 + vite 插件双布局探测 |
-| 渲染层异步吞错 | 界面永久卡加载态 | catch 里必须有可见反馈；关键 await 加超时 |
-| Device Guard 拦截 shim | pnpm/npx 被禁 | npm 直装或 npx pnpm@版本 |
-| **写死 `top:70px` 被系统标题栏吞**（#209） | 查词面板顶部像被遮住 | `top: max(70px, 7vh)` 自适应；像素取证定位标题栏高度 |
-| **`.v-center { min-height:100% }` 失效**（#192） | 内容居中不生效，下方大片空 | 用 `min-height: calc(100dvh - 上下padding)` 锚定视口 |
-| **hover 显形控件审计随机误报**（#203） | 同一代码两次运行审计结论相反 | 采样前 `sendInputEvent` 移出指针 + 让出一帧（CSS 注入 `:not(:hover)` 无效，指针驱动无解） |
-| **grill-me 排在流程中段被跳过**（#210） | 用户说"没有方案选择拷问" | 读项目后立即进入一次一问（阶段 0.6），每个分叉单独问，能查代码的不问 |
+- **排版**：定义标题、正文、标签、元数据、数值角色；用真实中英文与长标题验证换行。字体选用和授权/加载成本有依据，不强制禁用系统字体或必须双字体。
+- **色彩**：语义化定义背景、表面、文字、分隔、动作和状态；浅/深主题分别检查。弱化信息仍需清晰，色彩不能是状态的唯一线索。
+- **版式**：确定内容宽度、网格、分组距离和密度。卡片用于独立对象，不把每段内容包成卡片；信息分组优先于装饰。
+- **材质与资产**：表面、阴影、边框服务层级；玻璃、纹理、WebGL 或程序化封面只在所选方向有理由时启用，写降级路径，不视作高级感默认项。
+- **动效与状态**：以反馈、连续性和任务解释为目的；考虑打断、退出、低性能与 reduced-motion。避免用整页入场遮住内容或让键盘无法使用。
 
-## 阶段 6 · 打包分发（Electron + pnpm）
+沿用已有 CSS/组件方案。小范围主题调整可使用作用域覆盖；重复覆盖或结构已不适合时在授权范围内整理原组件与 tokens。不能承诺换肤零回归。
 
-pnpm `nodeLinker: hoisted` + 幽灵依赖清算 → electron-builder：`asar: false`（保 __dirname 相对路径：词典 ATTACH/tesseract langPath/data 目录）、files 白名单含只读数据资源（词典/内置素材/题库/词包）、**排除用户数据**（user.sqlite/backups/media/models/logs/shots）、NSIS per-user 可改目录、图标 ≥256px、`signAndEditExecutable: false`（Device Guard 拦 rcedit/signtool）→ 国内镜像 `ELECTRON_MIRROR` + `ELECTRON_BUILDER_BINARIES_MIRROR` → release/win-unpacked 直接跑 exe 冒烟 → `gh release create` + `gh release upload`（资产命名 ASCII，gh 中文编码坑）。
+## 阶段 4 · 实现核心路径，再扩展
 
-## 阶段 7 · 分发后
+按访谈确定的信息结构实现真实功能和内容；不默认添加 hero、全屏态、抽屉、游戏化或玻璃。优先打通一条完整路径，再复用组件铺开其他页面。
 
-用户反馈循环（截图+一句话 → 定向迭代，只改被点名的，不夹带）→ 版本发布流程（改 version → build → release → 文档编号追加）→ 数据备份（每日首启 VACUUM INTO 滚动 7 份）。
+覆盖适用的 hover/focus/active/disabled、loading/empty/error/success 与长内容。保留既有导航与数据行为；缺失后端不能用假成功提示冒充。示例数字和素材标明演示属性，不虚构客户、评价或产品能力。
 
----
+## 阶段 5 · 看结果，完成两类检查
 
-## 附录 A/B/C · 模板与定向迭代话术
+读 reviewer-manual。先看整体设计，再看机械审计，避免把「没溢出」当成「有设计质量」。
 
-三份模板（一句话定向迭代 / 模板 A 从零构造 / 模板 B 参考改版）见 [references/templates.md](references/templates.md)。日常直接填模板 B/C；结果出来后针对一个具体问题追加附录 A 的一句。不要把所有 skill 的全文和所有命令粘成一条超长指令。
+1. 启动真实页面，记录路由、视口、主题与状态。Web 通常检查桌面和约 390px 窄屏，再补实际边界；桌面专用应用检查正常/最小窗口和缩放，不强迫实现未要求的手机版。
+2. 对照 brief、参考继承表和方向约定，检查构图、层级、文字、密度、素材与表达是否成立。
+3. 走核心交互与适用异常状态，检查键盘、focus、溢出、对比度、缩放、控制台和 reduced-motion。审计采样给线索，人工确认后再修。
+4. 按任务影响排序，优先修阻塞与方向偏离，再统一细节；批量修完重新截图相关页面，避免无限循环和无关改版。
+5. 运行与改动相关的现有构建/类型检查/测试。已有截图基线时保持视口、数据、字体和动画稳定，区分预期设计变更与回归；diff 为零不是重设计的目标。
 
-## 附录 D · 公开前检查清单
+有委派能力且宿主允许时可交给评审 agent，明确范围与证据；否则自己按同一手册完成两遍检查。DSH 会注入评审手册，其他环境显式给手册路径。不要因为不能委派而停工。
 
-密钥扫描（含历史提交）→ 个人数据与业务数字模糊化 → LICENSE 补齐（MIT/Apache-2.0）→ README 截图与链接有效 → 嵌套 .git 排除 → Releases 资产命名 ASCII 化。
+不能查看图片时，用 DOM/computed styles 和几何测量验证已知问题；像素分析仅证明尺寸与差异区域，不能从白色边缘或深色横条推断抽屉、标题栏和审美结论。如实标「尚未完成视觉验收」。
 
-## 附录 E · 参考 skills 与插件资源入口
+## 阶段 6 / 7 · 交付与后续
 
-**本插件自带**（随 dsh-design-flow 注册，无需另装）：
+默认交付代码、运行方法、实际检查结果、截图和剩余限制。只有任务包含打包时才沿项目既有配置构建安装包并做冒烟，不擅自更改 asar、签名、依赖布局或数据备份策略。外部发布按用户授权执行。
 
-- **grill-me** —— 方案拷问（阶段 0.6 必用；触发词 grill me / stress-test a plan）
-- **react-best-practices** —— Vercel React/Next.js 性能规则（React 项目才按需）
-- **references/reviewer-manual.md** —— 子代理评审手册（委派子代理复查时自动注入，无需手动拼接路径）
-- **references/design-md/INDEX.md** —— 84 份品牌设计系统离线库索引（阶段 2 参考工程用）
-- **references/inspiration-matrix.md** —— 灵感源矩阵 + GitHub 项目挖掘法
-- **references/reference-engineering.md** —— 参考卡/七维拆解/短视频入库规范
-- **references/templates.md** —— 附录 A/B/C 模板
+DESIGN.md 保留最终方向、决定来源、tokens 与页级差异、已验/未验项。下个 agent 先读它，从未完成处继续，不重新访谈已定事项。
 
-**已收编的本机技能**（已从技能表隐藏，按「模式路由」表格路径 read 调读；原文件仍在 `~/.dsh/skills/` 独立存在，frontmatter 已标 `disable-model-invocation` + `user-invocable: false`，备份在插件仓库 `.skill-backups/`）：impeccable · frontend-design · taste-skill · design-taste-frontend · ui-ux-pro-max · make-interfaces-feel-better · web-design-guidelines
+| 完成判断 | 所需证据 |
+|---|---|
+| 需求明确 | 核心任务、范围、保留项、成功标准，决定与假设分开 |
+| 方向成立 | 有产品依据的构图和排版；开放方向有实际比较；已有方向被遵守 |
+| 技术可解释 | 关键效果有访谈依据、选型/备选、最小片段验证、资源清理和降级；不混淆网页与视频 |
+| 系统一致 | 角色 tokens 和组件在关键状态一致；例外有理由 |
+| 路径可用 | 真实操作与适用状态检查记录，没有假按钮/假成功 |
+| 质量可评估 | 真实截图/检查记录；工具缺失与未验项明确，不以规则通过冒充审美通过 |
 
-**由插件工具替代**：原 browser-testing-with-devtools 的运行页面/截图/键盘/控制台检查 → `oil_ui_shoot`。
+达到本次范围内的完成标准后停止。新增诉求单独处理，不把每次反馈扩成新一轮全站翻新。

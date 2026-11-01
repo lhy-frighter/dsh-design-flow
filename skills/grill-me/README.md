@@ -1,15 +1,9 @@
 # grill-me
 
-A Claude Code / Cowork skill that interviews you relentlessly about a plan or design until reaching shared understanding, resolving each branch of the decision tree.
+面向产品、设计与实施方案的深度访谈技能。用真实场景、决定依赖、取舍和压力测试，把愿望问成可交接的决定。
 
-Use it when you want to stress-test a plan, poke holes in a design, or just say "grill me".
+复制整个目录（包含 SKILL.md 和 references/question-bank.md）到宿主配置的 skills 目录。既可独立使用，也可由 design-flow 调用；不依赖 Claude 或 DSH 专属工具。
 
-## Install
+有结构化提问工具时使用它，没有时用普通对话。默认一次一问，已决定的不重问，明确授权 agent 自主选择时不增加确认环节。
 
-Drop the `SKILL.md` (or the whole folder) into your skills directory:
-
-```
-~/.claude/skills/grill-me/SKILL.md
-```
-
-Then trigger it by saying "grill me" or asking Claude to stress-test a plan.
+示例：「用 grill-me 帮我深入讨论这个设计方案，优先追问会影响用户任务和设计方向的取舍。」

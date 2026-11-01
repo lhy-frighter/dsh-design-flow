@@ -14,7 +14,10 @@ it('rebuilds stale lib before producing and verifying the plugin archive', async
     for (const entry of ['src', 'scripts', 'skills', 'tsdown.config.ts', 'tsconfig.json', 'package.json', 'LICENSE']) {
       await cp(join(repository, entry), join(root, entry), { recursive: true });
     }
-    await symlink(join(repository, 'node_modules'), join(root, 'node_modules'), 'dir');
+    // Windows 用 junction 链接 node_modules（'dir' 符号链接需要管理员权限）。
+    await (process.platform === 'win32'
+      ? symlink(join(repository, 'node_modules'), join(root, 'node_modules'), 'junction')
+      : symlink(join(repository, 'node_modules'), join(root, 'node_modules'), 'dir'));
     await mkdir(join(root, 'lib'));
     await writeFile(join(root, 'lib/index.js'), 'throw new Error("STALE_BUILD_SENTINEL");');
     const archive = join(root, 'result.tgz');
@@ -22,7 +25,8 @@ it('rebuilds stale lib before producing and verifying the plugin archive', async
     expect(result.stdout).toContain('Build complete');
     const unpack = join(root, 'unpacked');
     await mkdir(unpack);
-    await exec('tar', ['-xzf', archive, '-C', unpack]);
+    // --force-local：GNU tar 在 Windows 会把 "C:" 当作远程主机名。
+    await exec('tar', ['--force-local', '-xzf', archive, '-C', unpack]);
     const bundled = await readFile(join(unpack, 'package/lib/index.js'), 'utf8');
     expect(bundled).not.toContain('STALE_BUILD_SENTINEL');
     expect(bundled).toContain('oil-ui-subagent-reviewer');

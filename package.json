@@ -1,6 +1,6 @@
 {
   "name": "dsh-design-flow",
-  "version": "0.1.1",
+  "version": "0.3.1",
   "description": "个人 UI 设计工作流插件：ui-design-flow 全流程 + awesome-design-md 素材库 + 子代理评审注入（基于 dsh-oil-ui 骨架）",
   "license": "MIT",
   "author": "oil-oil",
@@ -53,7 +53,8 @@
     "pack:plugin": "node scripts/package-plugin.mjs",
     "sync:skill": "node scripts/vendor-oil-ui.mjs skills/oil-ui",
     "vendor:skill": "node scripts/vendor-oil-ui.mjs",
-    "build:skill": "node scripts/build-dsh-skill.mjs"
+    "build:skill": "node scripts/build-dsh-skill.mjs",
+    "export:portable": "node scripts/export-portable.mjs"
   },
   "peerDependencies": {
     "@deepseek-ai/cordis": "^4.0.4",
@@ -87,7 +88,7 @@
   },
   "engines": {
     "node": ">=22.19.0",
-    "dsh": "0.2.1-rc.2"
+    "dsh": ">=0.2.1-rc.2 <0.3.0-0"
   },
   "packageManager": "pnpm@10.16.1"
 }

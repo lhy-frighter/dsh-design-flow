@@ -65,7 +65,8 @@ export class Embedder {
   private total = 0;
   constructor(private root: string) { this.realRoot = realpath(root); }
   async path(value: string, base: string): Promise<string> {
-    if (/^(?:[a-z][a-z0-9+.-]*:|\/\/)/i.test(value)) throw new Error(`Use local assets, received ${value}`);
+    // Windows 盘符绝对路径（C:\…）不是 URL scheme；单字母+冒号仅按盘符处理。
+    if (/^(?![a-z]:)(?:[a-z][a-z0-9+.-]*:|\/\/)/i.test(value)) throw new Error(`Use local assets, received ${value}`);
     const clean = decodeURIComponent(value.split(/[?#]/,1)[0]!);
     const path = resolve(base,clean);
     const root = await this.realRoot;

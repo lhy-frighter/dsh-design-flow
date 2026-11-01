@@ -463,7 +463,8 @@ it('never awaits reviewer setup in agent/created, falls back after compile failu
     await mkdir(join(pro, 'references'), { recursive: true });
     await writeFile(join(pro, 'SKILL.md'), '---\nname: oil-ui-pro\ndescription: Test\n---\nTest');
     await writeFile(join(pro, 'references/tools.md'), 'node scripts/shoot.mjs <target>');
-    await symlink(root, join(pro, 'references/escape'));
+    // Windows 无符号链接权限时用 junction 触发同样的目录逃逸。
+    await (process.platform === 'win32' ? symlink(root, join(pro, 'references/escape'), 'junction') : symlink(root, join(pro, 'references/escape')));
     apply(ctx as unknown as Context, { previewPort: 0, preferPro: true, proSkillDir: pro });
     expect(listener!({ agent })).toBeUndefined();
     expect(listener!({ agent })).toBeUndefined();

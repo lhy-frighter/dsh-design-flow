@@ -1,0 +1,78 @@
+{
+  "name": "ui-design-flow",
+  "version": "5.1.0",
+  "files": [
+    {
+      "path": "SKILL.md",
+      "sha256": "bb678653af1b74927addb9d658b0e85946efee0a29634399222839a90791e566"
+    },
+    {
+      "path": "references/agent-portability.md",
+      "sha256": "31609c6be05493cd08c283a3f8b00da822bf9e32bcdf1762d859fc148b202813"
+    },
+    {
+      "path": "references/art-direction.md",
+      "sha256": "3857da84e81f2fbae02868590a1c01a6b859ec9d42018fa3897480f309ac5bd1"
+    },
+    {
+      "path": "references/inspiration-matrix.md",
+      "sha256": "58f4818d86a77c9604fce292a34a48078b4a36419e4aa3f7fafe018e0206c171"
+    },
+    {
+      "path": "references/reference-engineering.md",
+      "sha256": "379c94e876968ed240a24ab993dc4acd228f5a1cdb9f285e8ad39b9ac4b0cd1d"
+    },
+    {
+      "path": "references/reviewer-manual.md",
+      "sha256": "dfe09cae31feeec1fccb99d0410144f7b1873a9354ad682af096596ab19d55b3"
+    },
+    {
+      "path": "references/sources.md",
+      "sha256": "04ab9d115ae8cf24a3ba127f8872ff43270aab632c5180e6b36cb1757c06bbd9"
+    },
+    {
+      "path": "references/templates.md",
+      "sha256": "c0113ec064e0b561baf3d43951ce0904ef75aba52f8e9b4a4ebc2492eb1bce6a"
+    },
+    {
+      "path": "references/hallmark-adapter.md",
+      "sha256": "494033c49529bd396eb61b639e28e4c958a48c2c3d78ea988b4a34059d7593f9"
+    },
+    {
+      "path": "references/technology-routing.md",
+      "sha256": "50b2ee7d97df279c48c272caff40b2e4e2faa07f9d4f199c74277fb36a53e201"
+    },
+    {
+      "path": "references/motion-catalog.md",
+      "sha256": "11f78896bf73db2db803ab4470eef4f97357e82e8481c7a02a7c766a519d54ca"
+    },
+    {
+      "path": "references/routing-examples.md",
+      "sha256": "69ebaaf7c790c489d7b3943320eaf89e08a8ef03687d0012a62405bcda06781c"
+    },
+    {
+      "path": "references/technology-extensions.md",
+      "sha256": "484f69ad84782558564bcaf9b37867b1f2ae4705f5eee2a5f185bf72718ff47c"
+    },
+    {
+      "path": "references/asset-and-performance.md",
+      "sha256": "7abb2be862ead465740dee7fb709e15be3017b9a31f3a6e17739de141002dbf6"
+    },
+    {
+      "path": "references/grill-me.md",
+      "sha256": "b0dc13f9a1a734049211ef2a551984e8cd006a83a1f8f4e42b1878683a5223e6"
+    },
+    {
+      "path": "references/question-bank.md",
+      "sha256": "cd0e6066db58e46f85720d6ab981b0df83aaa777f9bef4c614e98650f26732ca"
+    },
+    {
+      "path": "LICENSE",
+      "sha256": "d44a3ca218007a85d3be41a0b76553d746e42336c7a63c6c6687d2619199c3c4"
+    },
+    {
+      "path": "README.md",
+      "sha256": "8315ad1f3c1c187feda75a9ea90682577914984e2fba87d9f93708172e402741"
+    }
+  ]
+}

@@ -1,10 +1,15 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { mkdtemp, rm, writeFile, mkdir, symlink, readFile, readdir, realpath } from 'node:fs/promises';
 import { join } from 'node:path';
+import { pathToFileURL } from 'node:url';
 import { tmpdir } from 'node:os';
 import { DesignWorkbench } from '../src/workbench.ts';
 import { ManagedProcesses } from '../src/processes.ts';
 import type { ImageRequest } from '../src/tool-requests.ts';
+
+// Windows 无符号链接权限时，目录链接用 junction（无需管理员权限，realpath 语义一致）。
+const linkDir = (target: string, path: string) =>
+  process.platform === 'win32' ? symlink(target, path, 'junction') : symlink(target, path);
 
 vi.mock('node:fs/promises', { spy: true });
 
@@ -100,7 +105,7 @@ describe('workspace-rooted preview server and security boundaries', () => {
     const outside = await mkdtemp(join(tmpdir(), 'oil-ui-outside-'));
     roots.push(outside);
     await writeFile(join(outside, 'secret.html'), 'private');
-    await symlink(outside, join(cwd, 'linked'));
+    await linkDir(outside, join(cwd, 'linked'));
     await writeFile(join(cwd, '.hidden.json'), 'secret');
 
     const base = await w.preview(cwd);
@@ -556,7 +561,8 @@ it('streams preview files with HEAD, bounded/open/suffix ranges and unsatisfiabl
   expect(await (await fetch(`${await w.preview(cwd)}/empty.txt`)).text()).toBe('');
 });
 
-it('rejects an external manifest symlink before writing an inferred explorer manifest', async () => {
+// Windows 文件符号链接需要管理员/开发者模式权限，无法在普通环境创建。
+it.skipIf(process.platform === 'win32')('rejects an external manifest symlink before writing an inferred explorer manifest', async () => {
   const { w, cwd, root } = await setup();
   await mkdir(join(cwd, 'explore'));
   for (const id of ['a', 'b', 'c']) await writeFile(join(cwd, `explore/${id}.html`), `<title>${id}</title>`);
@@ -617,7 +623,7 @@ it('validates every local batch target before starting the screenshot engine', a
   const { w, cwd, root } = await setup();
   await writeFile(join(cwd, 'index.html'), '<title>Home</title>');
   await writeFile(join(root, 'outside.html'), 'private');
-  await symlink(root, join(cwd, 'linked'));
+  await linkDir(root, join(cwd, 'linked'));
   const run = vi.spyOn(ManagedProcesses.prototype, 'run');
   for (const target of [
     [], ['index.html', ''], ['index.html', 'missing.html'], ['index.html', '../outside.html'],
@@ -681,9 +687,10 @@ it('uses real shoot.mjs dry-run parsing for uppercase presets, dimensions and st
 it('maps preview and array options through the real media parser, surfaces failed copies, and ignores unrelated output symlinks', async () => {
   const { w, cwd, root } = await setup();
   const modulePath = join(process.cwd(), 'skills/oil-ui/scripts/curate-media.mjs');
-  const { parseArgs } = await import(modulePath);
+  // Windows 裸绝对路径不是合法的 ESM 说明符，必须转 file:// URL。
+  const { parseArgs } = await import(pathToFileURL(modulePath).href);
   await mkdir(join(cwd, 'candidates'));
-  await symlink(root, join(cwd, 'candidates/unrelated'));
+  await linkDir(root, join(cwd, 'candidates/unrelated'));
   const commands: { command: string; opts: Record<string, unknown> }[] = [];
   vi.spyOn(ManagedProcesses.prototype, 'run').mockImplementation(async (_script, args) => {
     const parsed = parseArgs(args);
@@ -709,7 +716,7 @@ it('executes real curate-media search in candidates and fetch in assets using on
   const realScript = join(process.cwd(), 'skills/oil-ui/scripts/curate-media.mjs');
   const png = 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+a9XkAAAAASUVORK5CYII=';
   // Only network responses are fixtures: parsing, cache allocation, numbering, downloading and SOURCES.md are real.
-  const wrapper = `import{main}from ${JSON.stringify(realScript)};
+  const wrapper = `import{main}from ${JSON.stringify(pathToFileURL(realScript).href)};
     globalThis.fetch=async url=>{
       if(String(url).includes('/collections/'))return Response.json({results:[{title:'Bridge drawing',id:'https://www.loc.gov/item/bridge/',rights:'Public domain',resources:[{image:'https://fixture.invalid/sheet/bridge.png',url:'https://www.loc.gov/item/bridge/'}]}]});
       if(String(url).includes('fixture.invalid/sheet/'))return new Response(Buffer.from('${png}','base64'),{headers:{'content-type':'image/png'}});

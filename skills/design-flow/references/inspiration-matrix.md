@@ -1,20 +1,22 @@
-# 灵感源矩阵与参考挖掘法
+# 参考选择与 GitHub 挖掘
 
-> 主流程阶段 2 的配套分册。参考卡入库与七维拆解纪律见 [reference-engineering.md](reference-engineering.md)。
+阶段 2 按当前问题选少量资料，不要求每次联网搜一圈。素材与七维拆解格式见 [reference-engineering.md](reference-engineering.md)，本轮方法来源见 [sources.md](sources.md)。
 
-## 1. 灵感源矩阵（按用途选用）
+| 需要解决 | 优先参考 | 观察什么 |
+|---|---|---|
+| 用户任务和状态 | 项目现有路径、真实同类产品、Mobbin 等流程资料 | 入口、分组、反馈、恢复，不能只看首屏 |
+| 构图和排版 | 同类真实页面、出版物、作品与品牌资料 | 比例、主轴、层级、节奏和内容关系 |
+| 组件实现 | [shadcn/ui](https://github.com/shadcn-ui/ui)、[Radix Primitives](https://github.com/radix-ui/primitives)、项目已有组件 | 语义、键盘、状态、可维护性，不为外观重复引库 |
+| 过渡和连续性 | [Motion](https://github.com/motiondivision/motion)、[Vaul](https://github.com/emilkowalski/vaul)、项目现有动效 | 触发、打断、退出、性能和 reduced-motion |
+| 设计系统 | 已有 DESIGN.md、内置 design-md/INDEX.md（插件版） | 少量匹配资料的规则；是分析参考，不是品牌使用授权 |
+| 方向与审美方法 | sources.md 中的官方项目文件 | 适用条件和取舍，不复制所有规则到上下文 |
 
-- **画廊/灵感**（找布局节奏与模式，不抄视觉）：Mobbin（真实产品全流程截图，最有价值：看完整用户路径而非单帧）· Landdding（落地页每日精选+社区投票）· Dribbble/Behance（单帧视觉，多为不可实现 concept）· Lapa.ninja/Landingfolio（落地页分类集）· Muzli（趋势速览）
-- **组件/模板**（直接借结构）：shadcn/ui（基础件事实标准）· ThreeUI Community（103 个 Three.js 程序化组件，注意 GPU 争用）· Webflow Templates / Modulify（整页模板与区块拼装思路）· ui-ux-pro-max 内置检索
-- **动效**：Motion（motion.dev，原 Framer Motion，React 动效原语）· emilkowalski 动效教程与 Vaul（抽屉手感基准）。准则：动效只解释状态变化，reduced-motion 必须降级
-- **AI 生成**（快速出方向，不直接抄产物）：Modulify（prompt→Webflow 站）· v0.dev（prompt→React 组件）· VEKTR（自然语言概念设计）
-- **品牌设计系统（本插件离线库）**：[INDEX.md](design-md/INDEX.md)——84 份知名品牌 DESIGN.md（Apple/Airbnb/Notion/Linear/Stripe 等，色板/字体/间距 tokens 结构化抽出）。用法：按产品气质挑 1–3 个品牌 → 读对应 DESIGN.md → 走七维拆解标注继承/改造/舍弃。**tokens 是分析不是授权复制**，红线同下
-- **待确认**：EPOCH / Verona 未定位到确切站点，让用户补 URL/截图后再纳入
+## GitHub 项目阅读顺序
 
-## 2. GitHub 项目挖掘法
+1. 写明要解决的问题和机制关键词，例如「可打断的抽屉过渡」「密集列表键盘导航」，再搜索官方仓库。星数只用于发现，不能代替源码与质量判断。
+2. 检查许可证、近期维护情况、目标平台、依赖体积和运行要求；时间敏感信息当次核查，不把本文件当最新版本表。
+3. 阅读实际组件/样式/测试和可运行示例，确认截图效果由什么实现；README 宣传不构成复用证据。
+4. 对比沿用现有组件、提取薄层技法、引新库的成本，优先满足当前项目。未授权不复制商用资产、不运行未知安装脚本。
+5. 形成参考卡：问题、来源、实际看到了什么、借用机制、放弃什么、成本和验证方式。不能访问时标未核验，用已有材料继续。
 
-按"技法"而非"组件"挖：看到好效果 → 找实现机制 → 判断自研成本 → 决定引库或提取技法。路径：GitHub topic 搜索（如 `topic:liquid-glass`）→ star 排序 → **读 src 而非 README** → 检查许可证与平台兼容（Electron Chromium 对 backdrop-filter/SVG 滤镜完整支持；Safari/Firefox 需降级）。案例：liquid-glass-react = SVG feDisplacementMap + backdrop-filter + 高光边 + 弹性跟随，可提取为纯 CSS/薄层自研；ThreeUI = 程序化组件的目录组织与变体控制。
-
-## 3. 灵感源速查（一行版）
-
-Mobbin · Landdding · Dribbble/Behance · Lapa.ninja/Landingfolio · Muzli · shadcn/ui · ThreeUI · Webflow Templates · Modulify · v0.dev · VEKTR · Motion（motion.dev）· **design-md 离线库（[INDEX.md](design-md/INDEX.md)）** · EPOCH/Verona（待确认 URL）· **用户抖音/小红书收藏夹**（走 [reference-engineering.md](reference-engineering.md) §短视频入库）
+浏览器兼容、授权、API 和性能不能从项目名称推断。特别是玻璃、SVG 滤镜、WebGL 等效果，目标浏览器和真实硬件都可能需要降级。

@@ -77,10 +77,13 @@ describe('bundled open-source Skill and local Pro activation', () => {
       const bytes = await readFile(join(skillDirectory, file.path));
       const info = await lstat(join(skillDirectory, file.path));
       expect(bytes.length).toBe(file.size);
-      expect(`0${(info.mode & 0o777).toString(8).padStart(3, '0')}`).toBe(file.mode);
+      // POSIX 权限位断言仅在有真实 mode 位的环境执行（Windows 恒为 0666）。
+      if (process.platform !== 'win32') {
+        expect(`0${(info.mode & 0o777).toString(8).padStart(3, '0')}`).toBe(file.mode);
+      }
       expect(createHash('sha256').update(bytes).digest('hex')).toBe(file.sha256);
     }
-    expect((await readdir(join(skillDirectory, '..'))).sort()).toEqual(['oil-ui', 'oil-ui.manifest.json']);
+    expect((await readdir(join(skillDirectory, '..'))).sort()).toEqual(['design-flow', 'grill-me', 'oil-ui', 'oil-ui.manifest.json', 'react-best-practices']);
   });
 
   it('detects explicit Pro, compiles raw Pro Markdown into native Harness tools, and reports both versions', async () => {
@@ -177,8 +180,11 @@ describe('bundled open-source Skill and local Pro activation', () => {
     expect((await resolveActiveSkill({ proSkillDir: invalid })).edition).toBe('lite');
     const valid = await pro(join(root, 'valid'));
     await rm(join(invalid, 'SKILL.md'));
-    await symlink(join(valid, 'SKILL.md'), join(invalid, 'SKILL.md'));
-    expect((await resolveActiveSkill({ proSkillDir: invalid })).edition).toBe('lite');
+    // Windows 文件符号链接需要管理员权限；目录符号链接语义已由 junction 用例覆盖。
+    if (process.platform !== 'win32') {
+      await symlink(join(valid, 'SKILL.md'), join(invalid, 'SKILL.md'));
+      expect((await resolveActiveSkill({ proSkillDir: invalid })).edition).toBe('lite');
+    }
   });
 });
 
@@ -223,13 +229,16 @@ describe('local image-gen discovery', () => {
     const escaped = await imageScript(join(root, 'outside/mock.py'));
     const target = join(root, '.dsh/skills/image-gen/scripts/image_gen.py');
     await mkdir(join(target, '..'), { recursive: true });
-    await symlink(escaped, target);
-    expect(await resolveImageGenScript()).toBe(null);
-    const explicit = join(root, 'links/mock.py');
-    await mkdir(join(explicit, '..'), { recursive: true });
-    await symlink(escaped, explicit);
-    expect(await resolveImageGenScript({ imageGenScript: explicit })).toBe(null);
     expect(await resolveImageGenScript({ imageGenScript: root })).toBe(null);
+    // Windows 文件符号链接需要管理员权限；此处仅 POSIX 环境验证逃逸拒绝。
+    if (process.platform !== 'win32') {
+      await symlink(escaped, target);
+      expect(await resolveImageGenScript()).toBe(null);
+      const explicit = join(root, 'links/mock.py');
+      await mkdir(join(explicit, '..'), { recursive: true });
+      await symlink(escaped, explicit);
+      expect(await resolveImageGenScript({ imageGenScript: explicit })).toBe(null);
+    }
   });
 });
 
@@ -338,7 +347,8 @@ describe('atomic versioned Pro compilation and review fallback', () => {
     const dir = await pro(join(root, 'pro'));
     await mkdir(join(dir, 'references'));
     await writeFile(join(dir, 'references/tools.md'), 'node scripts/shoot.mjs <target>');
-    await symlink(root, join(dir, 'references/escape'));
+    // Windows 无符号链接权限时用 junction 触发同样的目录逃逸。
+    await (process.platform === 'win32' ? symlink(root, join(dir, 'references/escape'), 'junction') : symlink(root, join(dir, 'references/escape')));
     expect(await loadReviewerManual({ proSkillDir: dir })).toContain('# 视觉与交互评审手册');
     await rm(join(dir, 'references/escape'));
     await writeFile(join(dir, 'references/reviewer-manual.md'), '# Version one');

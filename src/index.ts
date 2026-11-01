@@ -13,12 +13,13 @@ export { Config };
 export const name = 'dsh-design-flow';
 
 export const MAIN_AGENT_SYSTEM_PROMPT =
-  'For UI design or redesign tasks, load the `design-flow` Skill with the skill tool first — it is the primary workflow (阶段 0–7: grill-me 拷问 → 参考工程 → 设计系统落盘 → 实现 → 截图验收). Formal visual/interaction review is delegated to subagents; the review manual is injected into them automatically. Use oil_ui_explorer for style-explorer.html comparison pages, oil_ui_shoot for screenshots/interactions/responsive checks/recordings/frame extraction, oil_ui_media for public-domain and museum media search/preview/fetch, and oil_ui_image for generating or editing visual assets. Call oil_ui_skill_status only when diagnosing the bundled Oil UI tooling itself.';
+  'For UI design or redesign tasks, load the `design-flow` Skill with the skill tool first — it is the primary workflow (阶段 0–7: grill-me 深度访谈 → 参考与艺术方向 → 技术路由 → 设计系统 → 实现 → 真实页面评审). Scale the workflow to the request: preserve settled decisions, interview high-impact unknowns, and do not turn local polish into a full redesign. Use the host question tool when available, otherwise ask in conversation. Map effect requirements from grill-me to technology-routing.md before implementation, check asset availability and effect cost first, and record actual performance evidence when relevant; distinguish live UI/GPU rendering from rendered video and generated footage. Preserve user design decisions when applying the Hallmark adapter. Delegate formal visual/interaction review only when the host permits it; the review manual is injected into subagents automatically. Otherwise review with the same manual yourself and report the actual verification coverage. Use oil_ui_explorer for style-explorer.html comparison pages, oil_ui_shoot for screenshots/interactions/responsive checks/recordings/frame extraction, oil_ui_media for public-domain and museum media search/preview/fetch, and oil_ui_image for generating or editing visual assets. Call oil_ui_skill_status only when diagnosing the bundled Oil UI tooling itself.';
 
 export function buildSubagentSystemPrompt(reviewerManual: string, referencesPath?: string): string {
   return [
     '当主 Agent 委派你执行界面视觉或交互评审（UI/UX Review）时，请直接按下方已内置的《视觉与交互评审手册》（`references/reviewer-manual.md`）执行，无需调用 `read_file`、`skill` 或 `oil_ui_skill_status` 重复读取该手册，评审过程中只提供客观评审意见、不修改项目文件。查看截图请用 `read_image`；需要补充 480px/180px 缩略图、遮字图（`mask: true`）或实际操作验证时请用 `oil_ui_shoot`。（若主 Agent 委派的是非评审类的常规子任务，则直接按主 Agent 的任务指令执行。）',
-    ...(referencesPath ? [`当前生效 Skill 的 references/ 绝对路径：${referencesPath}。Pro 评审按需读取 ${referencesPath}/review-modes.md 与 ${referencesPath}/play-craft.md。`] : []),
+    // 统一输出正斜杠路径：Windows 下 join 产生反斜杠，read/grep 工具两种都接受，但正斜杠跨平台一致。
+    ...(referencesPath ? [`当前生效 Skill 的 references/ 绝对路径：${referencesPath.replace(/\\/g, '/')}。Pro 评审按需读取 ${referencesPath.replace(/\\/g, '/')}/review-modes.md 与 ${referencesPath.replace(/\\/g, '/')}/play-craft.md。`] : []),
     '',
     reviewerManual.trim(),
   ].join('\n');
@@ -403,7 +404,7 @@ export function apply(ctx: Context, config: Config) {
           const target = invocation.rawInput.trim();
           const prompt = [
             'Load the `design-flow` Skill with the skill tool, then follow its 阶段 5 验收口径.',
-            'Capture desktop and mobile screenshots and key interactive states with oil_ui_shoot, then conduct a two-track UI/UX review covering visual hierarchy/craft and usability/task flow. Delegate the formal review to a subagent (the review manual is injected automatically).',
+            'Capture screenshots at the target desktop/mobile viewports or desktop-app window sizes and key interactive states with oil_ui_shoot. First assess the design against the brief and art direction, then check usability/task flow and technical evidence. Delegate the formal review to a subagent when the host permits it (the review manual is injected automatically); otherwise apply the same manual yourself and report actual coverage and unverified items.',
             ...(target ? ['', `Review target: ${target}`] : []),
           ].join('\n');
           invocation.agent.followup(
