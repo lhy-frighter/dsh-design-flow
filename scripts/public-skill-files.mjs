@@ -1,4 +1,4 @@
-// Reviewed public runtime distribution for oil-ui 0.23.6.
+// Reviewed public runtime distribution for oil-ui 0.32.0.
 export const publicSkillFiles = Object.freeze([
   ".gitignore",
   "LICENSE",
@@ -12,6 +12,7 @@ export const publicSkillFiles = Object.freeze([
   "assets/vendor/alpine.min.js",
   "references/design-direction.md",
   "references/direction-persuasion.md",
+  "references/image-ideation.md",
   "references/layout-and-viewport.md",
   "references/media.md",
   "references/motion.md",
@@ -19,17 +20,30 @@ export const publicSkillFiles = Object.freeze([
   "references/reviewer-manual.md",
   "references/scroll-narrative.md",
   "references/style-explorer.md",
+  "references/task-explore.md",
+  "references/task-review.md",
   "references/tools.md",
+  "references/ux-review.md",
+  "references/ux-reviewer.md",
   "references/visual-language.md",
   "references/visual-review.md",
+  "references/workdir.md",
   "scripts/build_explorer.py",
   "scripts/check_update.py",
   "scripts/check_update.sh",
+  "scripts/chrome.mjs",
   "scripts/curate-media.mjs",
+  "scripts/measure_reference.py",
+  "scripts/oiloil-image.mjs",
+  "scripts/prep-image.mjs",
   "scripts/recommend_once.py",
   "scripts/shoot.mjs",
   "tests/test_build_explorer.py",
   "tests/test_check_update.py",
   "tests/test_curate_media.py",
-  "tests/test_shoot.py"
+  "tests/test_measure_reference.py",
+  "tests/test_oiloil_image.py",
+  "tests/test_prep_image.py",
+  "tests/test_shoot.py",
+  "tests/test_workdir.py"
 ])

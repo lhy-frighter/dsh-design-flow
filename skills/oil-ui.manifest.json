@@ -1,6 +1,6 @@
 {
   "name": "oil-ui",
-  "version": "0.23.8",
+  "version": "0.32.0",
   "source": {
     "description": "The source directory is supplied by the caller and is intentionally not recorded as a machine-specific path.",
     "rootSymlinkResolved": true
@@ -15,6 +15,10 @@
       {
         "name": ".git",
         "reason": "Repository metadata is not part of the Skill runtime."
+      },
+      {
+        "name": ".github",
+        "reason": "GitHub workflow metadata is not part of the Skill runtime."
       },
       {
         "name": ".DS_Store",
@@ -43,6 +47,10 @@
         "reason": "Excluded from the runtime distribution (repository metadata, caches or documentation-only files)."
       },
       {
+        "path": ".github",
+        "reason": "Excluded from the runtime distribution (repository metadata, caches or documentation-only files)."
+      },
+      {
         "path": "assets/readme",
         "reason": "Excluded from the runtime distribution (repository metadata, caches or documentation-only files)."
       },
@@ -52,7 +60,7 @@
       }
     ]
   },
-  "fileCount": 32,
+  "fileCount": 46,
   "files": [
     {
       "path": ".gitignore",
@@ -80,8 +88,8 @@
     },
     {
       "path": "assets/style-explorer.html",
-      "sha256": "b15c732957c9937894e8f2fa18141de5825893398593a993c1b3b3a6e798db94",
-      "size": 39238,
+      "sha256": "910bbc6ed3e4a8bf92bd24883ac87b400f346fe146f2deafd8eee2ce38b4962e",
+      "size": 39479,
       "mode": "0644"
     },
     {
@@ -98,38 +106,44 @@
     },
     {
       "path": "README.md",
-      "sha256": "537cbb5c68a646d9620d059b32a122b4b2dee725f13600dcbc1e94e722b7d2d6",
-      "size": 8647,
+      "sha256": "60b88746914f5be0b47584b6b23360abb6bdcabeb346b019d94f9aeafbd19e19",
+      "size": 9464,
       "mode": "0644"
     },
     {
       "path": "README.zh-CN.md",
-      "sha256": "739f0ba66444cce6e763642ae162fbbb5f65d8f6784639eaf93872fc9d5f22dc",
-      "size": 7830,
+      "sha256": "746b0679ab980f627c3744a0e637bb30291545d42e2d55b0dabe4eac7b7d1772",
+      "size": 8505,
       "mode": "0644"
     },
     {
       "path": "references/design-direction.md",
-      "sha256": "8e5262da3a653cd2246063dda3311105aef10eeb3128ba358ac06c2597e0d234",
-      "size": 19736,
+      "sha256": "6cd52ca6beb0f0ff542a8c59164d6f94ac20346f556e8c3e5aa18dc9bde3421a",
+      "size": 26423,
       "mode": "0644"
     },
     {
       "path": "references/direction-persuasion.md",
-      "sha256": "511c30fe1330318a01a401024855b86666a07fcdb92a7c647d9a4a03a3b43690",
-      "size": 2141,
+      "sha256": "f229766bf763be2628c50ce9045c052d87018ffc91aea4a7964eb8a215cd146c",
+      "size": 2120,
+      "mode": "0644"
+    },
+    {
+      "path": "references/image-ideation.md",
+      "sha256": "b26066c5d92e3044cf298870432f2733d4f4949f2a8e250e11e5b7958c674e7e",
+      "size": 20664,
       "mode": "0644"
     },
     {
       "path": "references/layout-and-viewport.md",
-      "sha256": "827706ead63ed9f069b5878cd4f90ad20ddad1669a72445e3f2b8127a9499d47",
-      "size": 1576,
+      "sha256": "13b06b0d95ec6d58ea634616607bd776bf75fac339a97bf2b2b9ba2f38ec758d",
+      "size": 3286,
       "mode": "0644"
     },
     {
       "path": "references/media.md",
-      "sha256": "2545a2e9899d26bbfc24bc0562691a723c04ccd2582c64b6d86af329ef9d22a4",
-      "size": 17837,
+      "sha256": "b936d6ebfedab6f9683db0066a2a3baf7f0233dac0b8d174b90b7bda4cfb3a22",
+      "size": 20268,
       "mode": "0644"
     },
     {
@@ -140,50 +154,80 @@
     },
     {
       "path": "references/play.md",
-      "sha256": "e9a100e93ce4f145ddb93afd34dd0ea22bbffdbc2a83d6eabac685ab0964e264",
-      "size": 1902,
+      "sha256": "1785dd9eb73525631dcc516b7be45ba9676eb298742495615f6db67d1dd4baf5",
+      "size": 3226,
       "mode": "0644"
     },
     {
       "path": "references/reviewer-manual.md",
-      "sha256": "57c38acfacb070fbfb130ecbfd5aadd60a138cbfcbccd2f0f36955332ebea9a9",
-      "size": 12028,
+      "sha256": "54aee5cd31a742e3610200b48d7fc0b1120854215811fb4edf0cc4c9ede7c160",
+      "size": 11748,
       "mode": "0644"
     },
     {
       "path": "references/scroll-narrative.md",
-      "sha256": "4e91a56335c44da03693e1d4496f5bcbef4e95ff12d4b62fd9d0680d8d12e3a7",
-      "size": 9819,
+      "sha256": "568faf68eb4ae2fd5cf7e35d8caa055ccd352c787488caa1e1d41985f9edf8d2",
+      "size": 9825,
       "mode": "0644"
     },
     {
       "path": "references/style-explorer.md",
-      "sha256": "3d8093f296b008bf89ec7cc0539573c305310cdf67e45ff5f7cb18833aa1f5e5",
-      "size": 4430,
+      "sha256": "18fdc53b1e9ab620cc0123e652cc7ef338285b9a15477f3ca79f5c5efbf617b4",
+      "size": 3468,
+      "mode": "0644"
+    },
+    {
+      "path": "references/task-explore.md",
+      "sha256": "07a853988b844033b55c4fd386de30acd663279c5548ac483f9203e4cce7508d",
+      "size": 3385,
+      "mode": "0644"
+    },
+    {
+      "path": "references/task-review.md",
+      "sha256": "f7aa2861f851ebeb378cca45ab7a29eb2f46da089a53c656497dd9ee35cfe869",
+      "size": 1238,
       "mode": "0644"
     },
     {
       "path": "references/tools.md",
-      "sha256": "1fe195a5738e2372940e0669cc787061be30fe11dd1b4dfa166049d91a70af55",
-      "size": 8513,
+      "sha256": "5845c2a72b7c7c15d04639213905b1035925700347c196b54cc70d60d25f83d1",
+      "size": 9475,
+      "mode": "0644"
+    },
+    {
+      "path": "references/ux-review.md",
+      "sha256": "1cfc3eafaf90a53170a9de375a5dee56ecb656dfc4a174fc95f2ebbf084b0b17",
+      "size": 2666,
+      "mode": "0644"
+    },
+    {
+      "path": "references/ux-reviewer.md",
+      "sha256": "aafc0753939c06591d5078b066a89d8fe15bc539022b82b9778348a600b119fc",
+      "size": 1626,
       "mode": "0644"
     },
     {
       "path": "references/visual-language.md",
-      "sha256": "225f8a04b1cda046dfed56c91877acf29e7069523aa89fa1c8143ca2fa4c70dd",
-      "size": 11248,
+      "sha256": "667ee3bdfcfbed643cc230171dca28a45e3e5d93002634f364d0683dd9b7faea",
+      "size": 11104,
       "mode": "0644"
     },
     {
       "path": "references/visual-review.md",
-      "sha256": "188d3d08411b1a6b6fb4ba2db80172e4b44bd6e5fdafae92a2cff9013f9a45d7",
-      "size": 4116,
+      "sha256": "ef79159c848d14f2e844fe249e03e751211a1e2fdd09a200d98da143166cd10f",
+      "size": 4344,
+      "mode": "0644"
+    },
+    {
+      "path": "references/workdir.md",
+      "sha256": "8f56ed917e9784565c06e236bb783a8d7d644830daf67f27b2f3eff87ed0ca94",
+      "size": 5008,
       "mode": "0644"
     },
     {
       "path": "scripts/build_explorer.py",
-      "sha256": "bb05bef6ffafeeeaf08508d1b4993a6d880bc7a8e22b0d04765e1f616b13ae72",
-      "size": 42746,
+      "sha256": "a48d3cc52a0b273b8cdb84f2d29224c31e22f0e07c0ac0c56119d86f38788dd3",
+      "size": 46845,
       "mode": "0644"
     },
     {
@@ -199,10 +243,34 @@
       "mode": "0755"
     },
     {
+      "path": "scripts/chrome.mjs",
+      "sha256": "dcdc40740e541c97dc467f28f3430edc632469545504fdc165f633383ea01de3",
+      "size": 6679,
+      "mode": "0644"
+    },
+    {
       "path": "scripts/curate-media.mjs",
       "sha256": "2bc60a4bd761b7082ac17d0d3e2d4bc1d4630cf763138e9f3bd291d6ceb3bdf4",
       "size": 65277,
       "mode": "0644"
+    },
+    {
+      "path": "scripts/measure_reference.py",
+      "sha256": "7a10a0f87c2b1434d5047dea1903e7b0ec324ba539c68a448c0808c3a2aac536",
+      "size": 23122,
+      "mode": "0644"
+    },
+    {
+      "path": "scripts/oiloil-image.mjs",
+      "sha256": "9def8ef07485436207db85a97f4a8b2a5b8ccd7b3d381547834cfcb7ed6d0164",
+      "size": 23069,
+      "mode": "0755"
+    },
+    {
+      "path": "scripts/prep-image.mjs",
+      "sha256": "e886cb55c3e8e99317793fb53bc33aef1bfe4511c2c3aef66de6b48bdf107782",
+      "size": 21380,
+      "mode": "0755"
     },
     {
       "path": "scripts/recommend_once.py",
@@ -212,20 +280,20 @@
     },
     {
       "path": "scripts/shoot.mjs",
-      "sha256": "d7cd33600d63f65ffeed8cc74d115c50df91aaf08804d6ee72fe9bfcfd943944",
-      "size": 143638,
+      "sha256": "d11704d96d03e46bf0a0dbe725e585d57e7e863918477f3e3f7852577e748d3e",
+      "size": 138247,
       "mode": "0644"
     },
     {
       "path": "SKILL.md",
-      "sha256": "8bfa1d28ad4f52cf513079b1074a838975f4c565b29263f03f2f86c47a2268fd",
-      "size": 18094,
+      "sha256": "b7834b526bdb99c1f26f0ab61f0b002a3d3e05223e3563ab1d4872f7f9f702a5",
+      "size": 20986,
       "mode": "0644"
     },
     {
       "path": "tests/test_build_explorer.py",
-      "sha256": "c1ca470cff8449367a548825ac2647eb534b66366b4de2b6d3add00cebf6460a",
-      "size": 63312,
+      "sha256": "79bf92ffe465186289ec3de77fa632c6cda15954ad75f72a450be57b2928f6a9",
+      "size": 65257,
       "mode": "0644"
     },
     {
@@ -241,9 +309,33 @@
       "mode": "0644"
     },
     {
+      "path": "tests/test_measure_reference.py",
+      "sha256": "a16ebe5ea0b4321d22267f61e5cbea92e30fc79513a626bac7678ec36333b9ce",
+      "size": 4674,
+      "mode": "0644"
+    },
+    {
+      "path": "tests/test_oiloil_image.py",
+      "sha256": "a59a0e0cb66bcff4c81472c18e220cf5c07efea5b94ab78cb1115eda672c7c15",
+      "size": 33127,
+      "mode": "0644"
+    },
+    {
+      "path": "tests/test_prep_image.py",
+      "sha256": "ac182cfd9869574bca5ca64694578b9344c9b181597e06090e7135a22ec74a20",
+      "size": 13700,
+      "mode": "0644"
+    },
+    {
       "path": "tests/test_shoot.py",
-      "sha256": "55e2ac6ef3fb452e3251b92621f97b844f59f21db816abdd0d3711fea4971f7d",
-      "size": 148772,
+      "sha256": "21aa627fb9e7e808e36bc127be7de3f3487729d085f470d6899887da0c2f2475",
+      "size": 158511,
+      "mode": "0644"
+    },
+    {
+      "path": "tests/test_workdir.py",
+      "sha256": "05b252138f0eef0c8c06911ddd910ad4d2b9886c49a442ee62d8543b216f927a",
+      "size": 14123,
       "mode": "0644"
     }
   ]

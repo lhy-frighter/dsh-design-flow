@@ -5,6 +5,7 @@ import { loadUpstreamSkill, skillDirectory, skillStatus, resolveActiveSkill, res
 import { TRANSFORM_VERSION, isHarnessNativeSkillMarkdown, transformSkillMarkdown } from '../src/transform.ts';
 import { createHash } from 'node:crypto';
 import { join, relative, sep } from 'node:path';
+import { publicSkillFiles } from '../scripts/public-skill-files.mjs';
 
 const fixture = vi.hoisted(() => ({ home: '' }));
 vi.mock('node:os', async original => ({ ...(await original<typeof import('node:os')>()), homedir: () => fixture.home }));
@@ -54,11 +55,11 @@ describe('bundled open-source Skill and local Pro activation', () => {
     expect(toolsMd).not.toContain('node scripts/shoot.mjs');
   });
 
-  it('bundles[32] public files with matching offline manifest evidence and no Pro tree', async () => {
+  it('bundles the reviewed public files with matching offline manifest evidence and no Pro tree', async () => {
     const manifest = JSON.parse(await readFile(join(skillDirectory, '../oil-ui.manifest.json'), 'utf8'));
     expect(manifest.name).toBe('oil-ui');
     expect(manifest.version).toMatch(/^\d+\.\d+\.\d+$/);
-    expect(manifest.fileCount).toBe(32);
+    expect(manifest.fileCount).toBe(publicSkillFiles.length);
     const walk = async (directory: string): Promise<string[]> => {
       const paths: string[] = [];
       for (const row of await readdir(directory, { withFileTypes: true })) {
@@ -71,7 +72,8 @@ describe('bundled open-source Skill and local Pro activation', () => {
       return paths;
     };
     expect((await walk(skillDirectory)).sort()).toEqual(manifest.files.map((f: { path: string }) => f.path).sort());
-    expect(manifest.files).toHaveLength(32);
+    expect(manifest.files.map((f: { path: string }) => f.path).sort()).toEqual([...publicSkillFiles].sort());
+    expect(manifest.files).toHaveLength(publicSkillFiles.length);
     for (const file of manifest.files) {
       expect(file.path).not.toMatch(/^(references\/(direction-concept|direction-workspace|cards)\.md|assets\/cards(?:\/|$))/);
       const bytes = await readFile(join(skillDirectory, file.path));

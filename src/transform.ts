@@ -1,7 +1,7 @@
 import { chmod, copyFile, lstat, mkdir, readFile, readdir, realpath, rm, stat, symlink, writeFile } from 'node:fs/promises';
 import { dirname, join, relative, sep } from 'node:path';
 
-export const TRANSFORM_VERSION = '3';
+export const TRANSFORM_VERSION = '4';
 
 const EXCLUDED_NAMES = new Set(['.git', '.DS_Store', '__pycache__']);
 const DOC_ONLY_PATHS = new Set(['assets/readme', 'README.en.md']);
@@ -113,9 +113,10 @@ export function transformSkillMarkdown(relativePath: string, raw: string): strin
   if (normalized === 'references/style-explorer.md') {
     return raw
       .replace(/每个字段的写法和限制见生成器的 `--help`。/g, '字段与限制以 `oil_ui_explorer` 的参数说明及本页 manifest 示例为准。')
+      .replace(/其他字段写法见生成器的 `--help`。/g, '字段与限制以 `oil_ui_explorer` 的参数说明及本页 manifest 示例为准。')
       .replace(
-        /## 生成和打开\r?\n\r?\n```text\r?\npython3 <skill>\/scripts\/build_explorer\.py <manifest 所在目录>\/manifest\.json\r?\n```\r?\n\r?\n[^\r\n]+/,
-        `## 生成和打开\n\n调用 \`oil_ui_explorer\` 生成对比页：\n\n\`\`\`json\n{\n  "manifest": "explore/manifest.json",\n  "out": "style-explorer.html"\n}\n\`\`\`\n\n\`manifest\` 可传 \`manifest.json\` 的相对路径，也可直接传 JSON 对象；不传时工具会自动查找工作目录下的 \`manifest.json\` 或 \`explore/a.html\`、\`b.html\`、\`c.html\`。对比页默认生成在工作目录根部的 \`style-explorer.html\`，并返回预览地址 \`explorerUrl\`。`,
+        /## 生成和打开\r?\n\r?\n```text\r?\npython3 <skill>\/scripts\/build_explorer\.py [^\r\n]*\r?\n```\r?\n\r?\n[\s\S]*?(?=\r?\n## 记录选择)/,
+        `## 生成和打开\n\n调用 \`oil_ui_explorer\` 生成对比页：\n\n\`\`\`json\n{\n  "manifest": "explore/manifest.json",\n  "out": "style-explorer.html"\n}\n\`\`\`\n\n\`manifest\` 可传 \`manifest.json\` 的相对路径，也可直接传 JSON 对象；不传时工具会自动查找工作目录下的 \`manifest.json\` 或 \`explore/a.html\`、\`b.html\`、\`c.html\`。对比页默认生成在工作目录根部的 \`style-explorer.html\`，并返回预览地址 \`explorerUrl\`。\n`,
       )
       .replace(
         /`node <skill>\/scripts\/shoot\.mjs <manifest 所在目录> --size desktop --thumb --out shots\/explore`/g,

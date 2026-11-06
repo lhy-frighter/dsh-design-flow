@@ -40,7 +40,7 @@
 - 去联网化：不再核对 ui.oiloil.org 版本、无一次性 Pro 推销
 - win32 修复：scopedPath 接受反斜杠路径（上游禁  导致 Windows 绝对路径全被拒）
 - 命令与技能改名为 design-flow 前缀；主系统提示改为 design-flow 优先路由
-- 上游 oil-ui 技能原样保留作为工具层（32 文件 manifest 校验不变）
+- 上游 oil-ui 技能原样保留作为工具层（当前 46 文件 manifest 校验，路径与审阅清单逐一比对）
 
 ## 安装
 
