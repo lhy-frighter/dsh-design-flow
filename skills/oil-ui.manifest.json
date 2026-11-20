@@ -47,6 +47,10 @@
     ],
     "paths": [
       {
+        "path": ".git",
+        "reason": "Excluded from the runtime distribution (repository metadata, caches or documentation-only files)."
+      },
+      {
         "path": ".github",
         "reason": "Excluded from the runtime distribution (repository metadata, caches or documentation-only files)."
       },
@@ -70,277 +74,277 @@
       "path": ".gitignore",
       "sha256": "cc8f8cb4193fe226f0f10c69d5b4cf6b9596f04104ab552044145afd694bc3ea",
       "size": 160,
-      "mode": "0666"
+      "mode": "0644"
     },
     {
       "path": "assets/fonts/instrument-serif/InstrumentSerif-Regular.ttf",
       "sha256": "498efd461f6ddfcb7a111bf9a565709d2085d48201d501ead960d93e84ffbb88",
       "size": 70012,
-      "mode": "0666"
+      "mode": "0644"
     },
     {
       "path": "assets/fonts/instrument-serif/OFL.txt",
       "sha256": "129ed7618959716959f2941fdd5b49e0ad6e6c1d78726761786a00253d865521",
       "size": 4405,
-      "mode": "0666"
+      "mode": "0644"
     },
     {
       "path": "assets/logo.png",
       "sha256": "35f58a88e195bf4472e2f0fc795122fb9396464cbb3f0d7a2cb639b6c004f972",
       "size": 41901,
-      "mode": "0666"
+      "mode": "0644"
     },
     {
       "path": "assets/style-explorer.html",
       "sha256": "910bbc6ed3e4a8bf92bd24883ac87b400f346fe146f2deafd8eee2ce38b4962e",
       "size": 39479,
-      "mode": "0666"
+      "mode": "0644"
     },
     {
       "path": "assets/vendor/alpine.min.js",
       "sha256": "1d8911c7b8a55bd0ceb79896251ca00d575915e2cd4348e8007a850e59ba0dc0",
       "size": 55966,
-      "mode": "0666"
+      "mode": "0644"
     },
     {
       "path": "LICENSE",
       "sha256": "d44a3ca218007a85d3be41a0b76553d746e42336c7a63c6c6687d2619199c3c4",
       "size": 1064,
-      "mode": "0666"
+      "mode": "0644"
     },
     {
       "path": "README.md",
       "sha256": "78ec4db67ada72b7940ac9f55f8979c740e7f785c893845684961ddc25f2a321",
       "size": 14326,
-      "mode": "0666"
+      "mode": "0644"
     },
     {
       "path": "README.zh-CN.md",
       "sha256": "f1ca5cfad0511b8b44e2220cf06b4d1c07c416d2f702bb591247176c5d804464",
       "size": 13829,
-      "mode": "0666"
+      "mode": "0644"
     },
     {
       "path": "references/design-direction.md",
       "sha256": "afb8e5b8f6e7d188d07d05f828c2607810f5a5068acd5ff047f5bbb6ebba1d9f",
       "size": 26184,
-      "mode": "0666"
+      "mode": "0644"
     },
     {
       "path": "references/direction-persuasion.md",
       "sha256": "59efd787daddd270192b4e40bed2d4059f812bcc263a1ad0a1ed1348066428d4",
       "size": 2199,
-      "mode": "0666"
+      "mode": "0644"
     },
     {
       "path": "references/image-ideation.md",
       "sha256": "f2add5110432a44bc58c29e24164c30798eb6c6213ab8fdf224a25de86c271a8",
       "size": 20546,
-      "mode": "0666"
+      "mode": "0644"
     },
     {
       "path": "references/layout-and-viewport.md",
       "sha256": "cb6eefa0feb8d5d276f044024bbc0f4e96e80cbaf7f84e45fb6bb9c0e2d05cd7",
       "size": 3304,
-      "mode": "0666"
+      "mode": "0644"
     },
     {
       "path": "references/light-path.md",
       "sha256": "a8a7f5e4e5ef08a857b105f329a60ed4b0e62e451e82a4f841343b52f2330685",
       "size": 5908,
-      "mode": "0666"
+      "mode": "0644"
     },
     {
       "path": "references/media.md",
       "sha256": "b936d6ebfedab6f9683db0066a2a3baf7f0233dac0b8d174b90b7bda4cfb3a22",
       "size": 20268,
-      "mode": "0666"
+      "mode": "0644"
     },
     {
       "path": "references/motion.md",
       "sha256": "d8b85f8e83faa32dd032baac9ac83da9e27838bb543d111e81a2d943ef0c5af7",
       "size": 11888,
-      "mode": "0666"
+      "mode": "0644"
     },
     {
       "path": "references/play.md",
       "sha256": "1785dd9eb73525631dcc516b7be45ba9676eb298742495615f6db67d1dd4baf5",
       "size": 3226,
-      "mode": "0666"
+      "mode": "0644"
     },
     {
       "path": "references/reviewer-manual.md",
       "sha256": "9c2d8a141bd0f17c7b1c5036cad5c814e53075edd5f72330cac3bd8f0d954779",
       "size": 11572,
-      "mode": "0666"
+      "mode": "0644"
     },
     {
       "path": "references/scroll-narrative.md",
       "sha256": "5855d1c3e3d45e8df4b6270ceb0ed77d329c983fc07e64505b9df0e9b282b67d",
       "size": 9882,
-      "mode": "0666"
+      "mode": "0644"
     },
     {
       "path": "references/style-explorer.md",
       "sha256": "18fdc53b1e9ab620cc0123e652cc7ef338285b9a15477f3ca79f5c5efbf617b4",
       "size": 3468,
-      "mode": "0666"
+      "mode": "0644"
     },
     {
       "path": "references/task-explore.md",
       "sha256": "e8bb2f7a9e1c184358bf43836523e94c707bd8e525b403c709677dede5387484",
       "size": 3424,
-      "mode": "0666"
+      "mode": "0644"
     },
     {
       "path": "references/task-review.md",
       "sha256": "54c3366f46ef7dbfe16c76e5b9dda68c5965a0000e6a164d11cde04079b646b5",
       "size": 1235,
-      "mode": "0666"
+      "mode": "0644"
     },
     {
       "path": "references/tools.md",
       "sha256": "c62594865b6eb3219a18b61578fbb95f1d159f80d9ac6153b24bc827d8096afa",
       "size": 10400,
-      "mode": "0666"
+      "mode": "0644"
     },
     {
       "path": "references/ux-review.md",
       "sha256": "307250dc06d139bd009d8d3e2dfbe3c30d0eb0ef0786b665c7009c630b3d9376",
       "size": 2778,
-      "mode": "0666"
+      "mode": "0644"
     },
     {
       "path": "references/ux-reviewer.md",
       "sha256": "aafc0753939c06591d5078b066a89d8fe15bc539022b82b9778348a600b119fc",
       "size": 1626,
-      "mode": "0666"
+      "mode": "0644"
     },
     {
       "path": "references/visual-language.md",
       "sha256": "4c153fec80fe0a35fdc018db8d23eeb368d4a876a804e2090d766a44960b17d9",
       "size": 11071,
-      "mode": "0666"
+      "mode": "0644"
     },
     {
       "path": "references/visual-review.md",
       "sha256": "d8292f24e3c9af036f6f84829a26d364c5d90ef04be138bc0e5fa8f2a8592f98",
       "size": 4558,
-      "mode": "0666"
+      "mode": "0644"
     },
     {
       "path": "references/workdir.md",
       "sha256": "8f56ed917e9784565c06e236bb783a8d7d644830daf67f27b2f3eff87ed0ca94",
       "size": 5008,
-      "mode": "0666"
+      "mode": "0644"
     },
     {
       "path": "scripts/build_explorer.py",
       "sha256": "a48d3cc52a0b273b8cdb84f2d29224c31e22f0e07c0ac0c56119d86f38788dd3",
       "size": 46845,
-      "mode": "0666"
+      "mode": "0644"
     },
     {
       "path": "scripts/check_update.py",
       "sha256": "b6964662533467a9e976d129b772913c7e125538848fc834c08ed54982bc945c",
       "size": 15876,
-      "mode": "0666"
+      "mode": "0755"
     },
     {
       "path": "scripts/check_update.sh",
       "sha256": "eeebaf44eb29d61784690e09e0d8d306a44ca2a3025c48a42928b7ac7174d7d4",
       "size": 1254,
-      "mode": "0666"
+      "mode": "0755"
     },
     {
       "path": "scripts/chrome.mjs",
       "sha256": "dcdc40740e541c97dc467f28f3430edc632469545504fdc165f633383ea01de3",
       "size": 6679,
-      "mode": "0666"
+      "mode": "0644"
     },
     {
       "path": "scripts/curate-media.mjs",
       "sha256": "2bc60a4bd761b7082ac17d0d3e2d4bc1d4630cf763138e9f3bd291d6ceb3bdf4",
       "size": 65277,
-      "mode": "0666"
+      "mode": "0644"
     },
     {
       "path": "scripts/measure_reference.py",
       "sha256": "7a10a0f87c2b1434d5047dea1903e7b0ec324ba539c68a448c0808c3a2aac536",
       "size": 23122,
-      "mode": "0666"
+      "mode": "0644"
     },
     {
       "path": "scripts/oiloil-image.mjs",
       "sha256": "9def8ef07485436207db85a97f4a8b2a5b8ccd7b3d381547834cfcb7ed6d0164",
       "size": 23069,
-      "mode": "0666"
+      "mode": "0755"
     },
     {
       "path": "scripts/prep-image.mjs",
       "sha256": "e886cb55c3e8e99317793fb53bc33aef1bfe4511c2c3aef66de6b48bdf107782",
       "size": 21380,
-      "mode": "0666"
+      "mode": "0755"
     },
     {
       "path": "scripts/shoot.mjs",
       "sha256": "a4b0440a99ed01fcedeed7915a801020466ed18816502a1fdee2cf6aa125d5cb",
       "size": 148898,
-      "mode": "0666"
+      "mode": "0644"
     },
     {
       "path": "SKILL.md",
       "sha256": "30e12e779bfce5af9ada8b2e1d80536657ed5097720988f5b3ae64d091c57581",
       "size": 13485,
-      "mode": "0666"
+      "mode": "0644"
     },
     {
       "path": "tests/test_build_explorer.py",
       "sha256": "79bf92ffe465186289ec3de77fa632c6cda15954ad75f72a450be57b2928f6a9",
       "size": 65257,
-      "mode": "0666"
+      "mode": "0644"
     },
     {
       "path": "tests/test_check_update.py",
       "sha256": "e37f21dc5cd60c205a67849a7bdc5f99699ec993d0d66cb4178b35ce702e623a",
       "size": 23176,
-      "mode": "0666"
+      "mode": "0644"
     },
     {
       "path": "tests/test_curate_media.py",
       "sha256": "20244105f024df559569c56caae0977af50d15c4eeee2fc9571e66000fd1981d",
       "size": 28795,
-      "mode": "0666"
+      "mode": "0644"
     },
     {
       "path": "tests/test_measure_reference.py",
       "sha256": "a16ebe5ea0b4321d22267f61e5cbea92e30fc79513a626bac7678ec36333b9ce",
       "size": 4674,
-      "mode": "0666"
+      "mode": "0644"
     },
     {
       "path": "tests/test_oiloil_image.py",
       "sha256": "a59a0e0cb66bcff4c81472c18e220cf5c07efea5b94ab78cb1115eda672c7c15",
       "size": 33127,
-      "mode": "0666"
+      "mode": "0644"
     },
     {
       "path": "tests/test_prep_image.py",
       "sha256": "ac182cfd9869574bca5ca64694578b9344c9b181597e06090e7135a22ec74a20",
       "size": 13700,
-      "mode": "0666"
+      "mode": "0644"
     },
     {
       "path": "tests/test_shoot.py",
       "sha256": "0febea73da1f769d91ff73358ba33d0d5f63ca2c2a66e26f7fb895b433ab5d30",
       "size": 186672,
-      "mode": "0666"
+      "mode": "0644"
     },
     {
       "path": "tests/test_workdir.py",
       "sha256": "05b252138f0eef0c8c06911ddd910ad4d2b9886c49a442ee62d8543b216f927a",
       "size": 14123,
-      "mode": "0666"
+      "mode": "0644"
     }
   ]
 }
