@@ -13,8 +13,8 @@ const skillsDirectory = path.resolve(scriptDirectory, '..', 'skills')
 const destinationDirectory = path.join(skillsDirectory, 'oil-ui')
 const manifestPath = path.join(skillsDirectory, 'oil-ui.manifest.json')
 const excludedNames = new Set(['.git', '.github', '.DS_Store', '__pycache__'])
-// Documentation-only artwork and duplicate English README are outside the reviewed runtime distribution.
-const documentationOnly = new Set(['assets/readme', 'README.en.md'])
+// Documentation-only artwork and duplicate English/Japanese READMEs are outside the reviewed runtime distribution.
+const documentationOnly = new Set(['assets/readme', 'README.en.md', 'README.ja.md'])
 
 function usage() {
   process.stderr.write('Usage: node scripts/vendor-oil-ui.mjs <source-skill-directory>\n')
@@ -210,6 +210,7 @@ async function main() {
           { name: '*.pyc', reason: 'Compiled Python bytecode is a regenerable cache.' },
           { name: 'assets/readme', reason: 'README showcase images are not runtime resources.' },
           { name: 'README.en.md', reason: 'Duplicate English README; README.md is retained.' },
+          { name: 'README.ja.md', reason: 'Duplicate Japanese README; README.md is retained.' },
         ],
         paths: exclusions.sort((left, right) => left.path.localeCompare(right.path)),
       },

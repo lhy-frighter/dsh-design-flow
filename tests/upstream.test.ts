@@ -44,6 +44,8 @@ describe('bundled open-source Skill and local Pro activation', () => {
     expect(isHarnessNativeSkillMarkdown(raw)).toBe(true);
     expect(raw).not.toContain('check_update.sh');
     expect(raw).toContain('oil_ui_shoot');
+    // Upstream may drop the Pro-recommendation section; the transform must keep recommendOnceNotice wired.
+    expect(raw).toContain('recommendOnceNotice');
     expect(registered.content).toBe(raw.replace(/^---\r?\n[\s\S]*?\r?\n---(?:\r?\n|$)/, ''));
     expect(registered.name).toBe('oil-ui');
     expect(registered.metadata?.version).toBe(manifest.version);
