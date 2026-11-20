@@ -151,6 +151,18 @@ it('registers 5 native Harness tools, validates their schemas and operates direc
     });
     expect(exploreCmd).toMatchObject({ kind: 'success' });
     expect(followupMessages).toHaveLength(1);
+    expect(JSON.stringify(followupMessages[0])).toContain('rejection of all options');
+    expect(JSON.stringify(followupMessages[0])).toContain('generate targeted queries');
+    expect(JSON.stringify(followupMessages[0])).toContain('use supplied or local references');
+    expect(JSON.stringify(followupMessages[0])).not.toContain('Explore 3');
+    const reviewCmd = await commands.get('design-flow-review')!.handler({
+      agent: exec.agent,
+      rawInput: 'Accepted visual sample',
+      attachments: [],
+      signal: exec.signal,
+    });
+    expect(reviewCmd).toMatchObject({ kind: 'success' });
+    expect(JSON.stringify(followupMessages[1])).toContain('accepted visual sample and running UI side by side');
     expect(registration?.name).toBe('oil-ui');
     expect(prompt).toContain('load the `design-flow` Skill');
     expect(prompt).toContain('oil_ui_explorer');
@@ -399,7 +411,8 @@ it('automatically injects reviewer-manual.md into subagent system prompt and pre
     await vi.waitFor(() => expect(subSections).toHaveLength(1), { timeout: 5000 });
     expect(subSections[0]!.name).toBe('oil-ui-subagent-reviewer');
     expect(subSections[0]!.text).toContain('/references');
-    expect(subSections[0]!.text).toContain('# 视觉与交互评审手册 (子 Agent 专用)');
+    expect(subSections[0]!.text).toContain('# Design Flow 视觉与交互评审手册');
+    expect(subSections[0]!.text).not.toContain('全新界面与改版评审（打分制）');
     expect(subSections[0]!.text).toContain('oil_ui_shoot');
     expect(subSections[0]!.text).toContain('read_image');
     expect(subSections[0]!.text).not.toContain('call oil_ui_skill_status first');
@@ -428,8 +441,9 @@ it('automatically injects reviewer-manual.md into subagent system prompt and pre
     };
     for (const listener of createdListeners) await listener({ agent: proSubagent });
     await vi.waitFor(() => expect(proSubSections).toHaveLength(1), { timeout: 5000 });
-    expect(proSubSections[0]!.text).toContain('Pro 专属标识');
-    expect(proSubSections[0]!.text).toContain('能用 `oil_ui_shoot` 时');
+    expect(proSubSections[0]!.text).toContain('oil-ui-pro/references');
+    expect(proSubSections[0]!.text).toContain('# Design Flow 视觉与交互评审手册');
+    expect(proSubSections[0]!.text).not.toContain('Pro 专属标识');
   } finally {
     await Promise.all(disposers.map(dispose => dispose()));
     await rm(root, { recursive: true, force: true });
@@ -468,7 +482,7 @@ it('never awaits reviewer setup in agent/created, falls back after compile failu
     apply(ctx as unknown as Context, { previewPort: 0, preferPro: true, proSkillDir: pro });
     expect(listener!({ agent })).toBeUndefined();
     expect(listener!({ agent })).toBeUndefined();
-    await vi.waitFor(() => expect(sections.get('oil-ui-subagent-reviewer')).toContain('# 视觉与交互评审手册'), { timeout: 5000 });
+    await vi.waitFor(() => expect(sections.get('oil-ui-subagent-reviewer')).toContain('# Design Flow 视觉与交互评审手册'), { timeout: 5000 });
     expect(sections.get('oil-ui')).toBe(inherited);
     expect(sections.size).toBe(2);
     await Promise.all(disposers.map(dispose => dispose()));

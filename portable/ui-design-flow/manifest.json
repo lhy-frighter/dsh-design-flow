@@ -1,38 +1,38 @@
 {
   "name": "ui-design-flow",
-  "version": "5.1.0",
+  "version": "5.5.0",
   "files": [
     {
       "path": "SKILL.md",
-      "sha256": "bb678653af1b74927addb9d658b0e85946efee0a29634399222839a90791e566"
+      "sha256": "7e5fedad43226d727a14830a0289a64b22144e778dcd3db0cc90e89977d7d1fa"
     },
     {
       "path": "references/agent-portability.md",
-      "sha256": "31609c6be05493cd08c283a3f8b00da822bf9e32bcdf1762d859fc148b202813"
+      "sha256": "f9873a0ad620503f9a5a53e2b7c356a162409852601d958d190ba0ff8faa1776"
     },
     {
       "path": "references/art-direction.md",
-      "sha256": "3857da84e81f2fbae02868590a1c01a6b859ec9d42018fa3897480f309ac5bd1"
+      "sha256": "b19251e628d06d152beb1f8eeaec53d13ff3b051823fb57aff24dc2d1278e519"
     },
     {
       "path": "references/inspiration-matrix.md",
-      "sha256": "58f4818d86a77c9604fce292a34a48078b4a36419e4aa3f7fafe018e0206c171"
+      "sha256": "1721ce3c7a7c2b6b8dadf765d460dcf3dd0f182a94e88b914a0fb84d90cafce4"
     },
     {
       "path": "references/reference-engineering.md",
-      "sha256": "379c94e876968ed240a24ab993dc4acd228f5a1cdb9f285e8ad39b9ac4b0cd1d"
+      "sha256": "112722ad8cfbfb673ebfab1e037e379fcc2de077cbd1ed82601ca0ece62b3659"
     },
     {
       "path": "references/reviewer-manual.md",
-      "sha256": "dfe09cae31feeec1fccb99d0410144f7b1873a9354ad682af096596ab19d55b3"
+      "sha256": "469726dfe364db77afdde589fc5ebe38cfd6be50c117c13c95e5c4c1252df2f9"
     },
     {
       "path": "references/sources.md",
-      "sha256": "04ab9d115ae8cf24a3ba127f8872ff43270aab632c5180e6b36cb1757c06bbd9"
+      "sha256": "f8dc9ea642070bb6d5955709ccbdaa8ea3acbadbcb126896dfc2417855652860"
     },
     {
       "path": "references/templates.md",
-      "sha256": "c0113ec064e0b561baf3d43951ce0904ef75aba52f8e9b4a4ebc2492eb1bce6a"
+      "sha256": "64a8c4e670914a0d6315f5b80a08c22e703ed1009a7d30f9139a4943596bdf5b"
     },
     {
       "path": "references/hallmark-adapter.md",
@@ -40,7 +40,7 @@
     },
     {
       "path": "references/technology-routing.md",
-      "sha256": "50b2ee7d97df279c48c272caff40b2e4e2faa07f9d4f199c74277fb36a53e201"
+      "sha256": "f942f0a0910bff2abbf0dfa60677eb9660e0eb904b66904ea84a18fc315c7c55"
     },
     {
       "path": "references/motion-catalog.md",
@@ -60,11 +60,11 @@
     },
     {
       "path": "references/grill-me.md",
-      "sha256": "b0dc13f9a1a734049211ef2a551984e8cd006a83a1f8f4e42b1878683a5223e6"
+      "sha256": "a9949a1896bfa94f8ce61600df4ca84dcb8591ca95f3b7c3722ba1daf9a143b1"
     },
     {
       "path": "references/question-bank.md",
-      "sha256": "cd0e6066db58e46f85720d6ab981b0df83aaa777f9bef4c614e98650f26732ca"
+      "sha256": "867d027d8e7dd9f3dc92588fb7f0a28dd114539154ee6b2ef6eb6496772b6bca"
     },
     {
       "path": "LICENSE",
@@ -72,7 +72,7 @@
     },
     {
       "path": "README.md",
-      "sha256": "8315ad1f3c1c187feda75a9ea90682577914984e2fba87d9f93708172e402741"
+      "sha256": "1f29634072e7c5e459fe3ab49f06e50f8046270dce2c269b65716686d284725b"
     }
   ]
 }

@@ -23,3 +23,27 @@
 ## 2026-11-01 · v5.1 增补
 
 官方资料与本地选择条件见 [technology-extensions.md](technology-extensions.md)：MDN View Transitions / scroll-driven animations、Rive runtime、Apache ECharts、D3、R3F/Drei、OGL；[asset-and-performance.md](asset-and-performance.md) 引用 glTF Transform 官方工具资料。扩展内容为本流程原创编写的技术决策与验收规则，未复制第三方脚本或素材，不新增全局安装和付费调用。
+
+## 2026-11-16 增量打磨与 Electron 验收
+
+- [Radix Colors 色阶用途](https://www.radix-ui.com/colors/docs/palette-composition/understanding-the-scale)与 [Adobe Spectrum 色彩角色](https://spectrum.adobe.com/foundations/color/colors)提供按用途组织色阶的方法。
+- [MDN View Transition API](https://developer.mozilla.org/en-US/docs/Web/API/View_Transition_API/Using)、[React flushSync](https://react.dev/reference/react-dom/flushSync)及 [React ViewTransition](https://react.dev/reference/react/ViewTransition)用于核查快照、提交顺序和框架过渡边界。
+- [Playwright Electron 文档](https://playwright.dev/docs/api/class-electron)、[Electron webContents](https://www.electronjs.org/docs/latest/api/web-contents)和 [CDP Page](https://chromedevtools.github.io/devtools-protocol/tot/Page/)提供桌面窗口取证路径。
+
+## 2026-11-13 定向检索与参考转译
+
+- [优设美地](https://allan.xin/)通过网页的公开分类、搜索和预览接入。本轮采用网页路径，MCP 接入条件待核验。
+- [design-inspiration-mcp-server](https://github.com/YonasValentin/design-inspiration-mcp-server#how-it-actually-works) 提供按站点限定检索、图文结果区分和保留出处的做法。[Dembrandt](https://github.com/dembrandt/dembrandt) 提供以运行时计算样式提取规则的做法。两者是方法参考；宿主已有能力可执行对应步骤。
+- [dsh-refpics](https://github.com/Ghz114514/dsh-refpics) 提供候选图墙与出处展示的交互参考。现有供应商适合通用图片，Harness 0.2.1 兼容性待验证。
+
+## Impeccable 的接入方式
+
+- Design Flow 和通用版内置场景分类、排版/层级检查、真实画面复查与证据记录，均可独立执行。插件包内未捆绑 Impeccable 全套 Skill 或 CLI。
+- 宿主已提供 Impeccable 时，按实际问题读取一份对应规则，例如 `typeset` 核对排版、`critique` 找构图与层级偏差、`audit` 找可用性问题。检查真实路径与能力，执行过的工具才记入报告。外部 detector 和 live 功能依赖独立工具环境。未安装时依靠内置规则与宿主已有的截图、操作和测量能力完成验收。
+- [Impeccable critique](https://github.com/pbakaus/impeccable/blob/main/.agents/skills/impeccable/reference/critique.md) 的问题检查可借用，自动设计总分不纳入 Design Flow 验收。
+
+## 2026-11-12 审美校准与画面对照
+
+- [Hallmark 工作流程](https://github.com/Nutlope/hallmark#how-a-build-runs) 与 [Google Stitch design-md](https://github.com/google-labs-code/stitch-skills/blob/main/plugins/stitch-utilities/skills/design-md/SKILL.md) 提供了先看局部渲染和从可见参考提取规则的做法。
+- [OpenAI frontend-app-builder 的复查流程](https://github.com/openai/plugins/blob/main/plugins/build-web-apps/skills/frontend-app-builder/SKILL.md#verification) 提供了确认稿、实际画面与偏差记录的对照方法。
+- 比较模型或流程时，可参考 [Design2Code 的人工成对评估](https://github.com/jiahuigeng/Design2Code#model-predictions)。先固定模型、brief 和素材，盲比两种流程，再固定流程比较模型。评审能力可用已有复现步骤的缺陷测检出与误报。

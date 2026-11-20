@@ -1,6 +1,6 @@
 # ui-design-flow 便携版
 
-自包含的 UI 设计/重设计技能（流程 v5.1.0），包含深度访谈、问题题库、艺术方向、实现与评审资料。
+自包含的 UI 设计/重设计技能（流程 v5.5.0），包含深度访谈、问题题库、艺术方向、实现与评审资料。
 
 把整个 ui-design-flow 文件夹复制到宿主支持的 skills 目录，保留 SKILL.md、references/ 和 LICENSE。
 例如项目的 .agents/skills/ui-design-flow/；具体发现路径以该 agent 的配置为准。

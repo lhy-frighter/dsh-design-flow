@@ -6,21 +6,22 @@ import { createUserMessage, type FileBlock, type ImageBlock } from '@deepseek-ai
 import { defineTool, type ToolRunContext, type InferValue, type GenericCallView } from '@deepseek-ai/dsh-tools';
 import '@deepseek-ai/dsh-skill';
 import '@deepseek-ai/dsh-system-prompt';
-import { loadUpstreamSkill, skillStatus, resolveActiveSkill, createSkillProvider, loadReviewerManual, discoverSkill, bundledSkillDirectory, designFlowSkillDirectory, loadBundledSkill } from './upstream.ts';
+import { loadUpstreamSkill, skillStatus, resolveActiveSkill, createSkillProvider, discoverSkill, bundledSkillDirectory, designFlowSkillDirectory, loadBundledSkill } from './upstream.ts';
 import { Config } from './config.ts';
 import { DesignWorkbench } from './workbench.ts';
 export { Config };
 export const name = 'dsh-design-flow';
 
 export const MAIN_AGENT_SYSTEM_PROMPT =
-  'For UI design or redesign tasks, load the `design-flow` Skill with the skill tool first — it is the primary workflow (阶段 0–7: grill-me 深度访谈 → 参考与艺术方向 → 技术路由 → 设计系统 → 实现 → 真实页面评审). Scale the workflow to the request: preserve settled decisions, interview high-impact unknowns, and do not turn local polish into a full redesign. Use the host question tool when available, otherwise ask in conversation. Map effect requirements from grill-me to technology-routing.md before implementation, check asset availability and effect cost first, and record actual performance evidence when relevant; distinguish live UI/GPU rendering from rendered video and generated footage. Preserve user design decisions when applying the Hallmark adapter. Delegate formal visual/interaction review only when the host permits it; the review manual is injected into subagents automatically. Otherwise review with the same manual yourself and report the actual verification coverage. Use oil_ui_explorer for style-explorer.html comparison pages, oil_ui_shoot for screenshots/interactions/responsive checks/recordings/frame extraction, oil_ui_media for public-domain and museum media search/preview/fetch, and oil_ui_image for generating or editing visual assets. Call oil_ui_skill_status only when diagnosing the bundled Oil UI tooling itself.';
+  'For UI design, redesign, or feature work that introduces or moves visible UI, load the `design-flow` Skill with the skill tool first — it is the primary workflow (阶段 0–7: grill-me 深度访谈 → 参考与艺术方向 → 技术路由 → 设计系统 → 实现 → 真实页面评审). Scale the workflow to the request: preserve settled decisions, check the target DESIGN.md zone and neighboring components for incremental changes, interview high-impact unknowns, and do not turn local polish into a full redesign. Use the host question tool when available, otherwise ask in conversation. Map effect requirements from grill-me to technology-routing.md before implementation, check asset availability and effect cost first, and record actual performance evidence when relevant; distinguish live UI/GPU rendering from rendered video and generated footage. Preserve user design decisions when applying the Hallmark adapter. Delegate formal visual/interaction review only when the host permits it; the review manual is injected into subagents automatically. Otherwise review with the same manual yourself and report the actual verification coverage. Report evidence-backed acceptance results without automated design ratings, even when optional Oil UI or third-party rules are used. Use oil_ui_explorer for style-explorer.html comparison pages, oil_ui_shoot for screenshots/interactions/responsive checks/recordings/frame extraction, oil_ui_media for public-domain and museum media search/preview/fetch, and oil_ui_image for generating or editing visual assets. Call oil_ui_skill_status only when diagnosing the bundled Oil UI tooling itself.';
 
 export function buildSubagentSystemPrompt(reviewerManual: string, referencesPath?: string): string {
   return [
     '当主 Agent 委派你执行界面视觉或交互评审（UI/UX Review）时，请直接按下方已内置的《视觉与交互评审手册》（`references/reviewer-manual.md`）执行，无需调用 `read_file`、`skill` 或 `oil_ui_skill_status` 重复读取该手册，评审过程中只提供客观评审意见、不修改项目文件。查看截图请用 `read_image`；需要补充 480px/180px 缩略图、遮字图（`mask: true`）或实际操作验证时请用 `oil_ui_shoot`。（若主 Agent 委派的是非评审类的常规子任务，则直接按主 Agent 的任务指令执行。）',
     // 统一输出正斜杠路径：Windows 下 join 产生反斜杠，read/grep 工具两种都接受，但正斜杠跨平台一致。
-    ...(referencesPath ? [`当前生效 Skill 的 references/ 绝对路径：${referencesPath.replace(/\\/g, '/')}。Pro 评审按需读取 ${referencesPath.replace(/\\/g, '/')}/review-modes.md 与 ${referencesPath.replace(/\\/g, '/')}/play-craft.md。`] : []),
+    ...(referencesPath ? [`可选 Oil UI 补充资料的 references/ 绝对路径：${referencesPath.replace(/\\/g, '/')}。需要 Pro 专项方法时按需读取 ${referencesPath.replace(/\\/g, '/')}/review-modes.md 与 ${referencesPath.replace(/\\/g, '/')}/play-craft.md。`] : []),
     '',
+    '默认逐项记录预期、实际证据及通过／未通过／待验证。Oil UI 或外部手册中的自动总分与等级不用于 Design Flow 验收。',
     reviewerManual.trim(),
   ].join('\n');
 }
@@ -351,7 +352,7 @@ export function apply(ctx: Context, config: Config) {
           const lines = [
             `当前生效 Skill：${status.activeSkillName} v${status.activeVersion}`,
             `本地生图（image-gen）：${status.imageGenAvailable ? `可用（${status.imageGenScriptPath}）` : '未检测到'}`,
-            `子代理评审手册注入：已启用（oil-ui 手册 + design-flow 验收口径）`,
+            `子代理评审手册注入：已启用（Design Flow 证据验收）`,
           ];
           return {
             kind: 'success',
@@ -362,7 +363,7 @@ export function apply(ctx: Context, config: Config) {
 
       const disposeExplore = ctx.commands.register({
         name: 'design-flow-explore',
-        description: '探索 3 个不同设计方向并生成 style-explorer.html 同屏对比页',
+        description: '校准视觉偏好并同屏比较设计方向',
         input: {
           hint: '<设计需求或目标页面>',
           attachments: true,
@@ -376,8 +377,8 @@ export function apply(ctx: Context, config: Config) {
             };
           }
           const prompt = [
-            'Load the `design-flow` Skill with the skill tool, then follow its 阶段 2 参考工程 discipline.',
-            'Explore 3 genuinely distinct design directions in explore/a.html, explore/b.html, and explore/c.html, package them into style-explorer.html with oil_ui_explorer, and inspect the comparison page and cards with oil_ui_shoot.',
+            'Load the `design-flow` Skill with the skill tool. For open directions, follow 阶段 2 and inspiration-matrix.md to generate targeted queries, verify actual reference evidence with the tools available, and translate it into preview decisions with explicit trade-offs and checks. Validate effects essential to the direction before finalizing it. If search is unavailable, use supplied or local references.',
+            'Use the visual calibration in 阶段 0.6 / 1 and art-direction.md when preferences are unclear. Compare same-content previews, allow partial preference or rejection of all options, and revise the smallest preview when calibration misses. Follow the Skill for the number and scope of directions. Use oil_ui_explorer and oil_ui_shoot when available to present and inspect actual comparisons.',
             ...(brief ? ['', `Design brief: ${brief}`] : []),
           ].join('\n');
           invocation.agent.followup(
@@ -388,7 +389,7 @@ export function apply(ctx: Context, config: Config) {
           );
           return {
             kind: 'success',
-            text: '已发起三方向设计探索。',
+            text: '已发起设计方向探索。',
           };
         },
       });
@@ -404,7 +405,7 @@ export function apply(ctx: Context, config: Config) {
           const target = invocation.rawInput.trim();
           const prompt = [
             'Load the `design-flow` Skill with the skill tool, then follow its 阶段 5 验收口径.',
-            'Capture screenshots at the target desktop/mobile viewports or desktop-app window sizes and key interactive states with oil_ui_shoot. First assess the design against the brief and art direction, then check usability/task flow and technical evidence. Delegate the formal review to a subagent when the host permits it (the review manual is injected automatically); otherwise apply the same manual yourself and report actual coverage and unverified items.',
+            'Capture screenshots at the target desktop/mobile viewports or desktop-app window sizes and key interactive states with oil_ui_shoot. Compare the accepted visual sample and running UI side by side when available, document visible mismatches with evidence, then report each applicable check as pass, fail, or unverified. Include actual review method and evidence. Omit automated design scores and ratings. Delegate the formal review to a subagent when the host permits it (the review manual is injected automatically); otherwise apply the same manual yourself and report actual coverage and unverified items.',
             ...(target ? ['', `Review target: ${target}`] : []),
           ].join('\n');
           invocation.agent.followup(
@@ -454,20 +455,17 @@ export function apply(ctx: Context, config: Config) {
       } catch { /* Discovery failure still allows the bundled review manual. */
         active = { edition: 'lite' as const, name: 'oil-ui' as const, directory: bundledSkillDirectory, source: 'bundled-lite' as const };
       }
-      const manual = await loadReviewerManual(options, active);
-      if (!manual || disposed) return;
-      // [dsh-design-flow] 追加用户流程的验收口径手册（design-flow 评审手册），失败不阻塞注入。
-      let designFlowManual = '';
+      if (disposed) return;
+      let manual = '';
       try {
-        const raw = await readFile(join(designFlowSkillDirectory, 'references', 'reviewer-manual.md'), 'utf8');
-        if (raw.trim() !== '') designFlowManual = `\n\n---\n\n${raw.trim()}`;
-      } catch { /* 手册缺失时退回纯 oil-ui 手册。 */ }
+        manual = await readFile(join(designFlowSkillDirectory, 'references', 'reviewer-manual.md'), 'utf8');
+      } catch { /* 保留内置证据验收规则。 */ }
       if (disposed) return;
       const dispose = agent.ctx.systemPrompt.section({
         name: 'oil-ui-subagent-reviewer',
         order: 71,
         interpolate: false,
-        text: buildSubagentSystemPrompt(manual, referencesPath) + designFlowManual,
+        text: buildSubagentSystemPrompt(manual, referencesPath),
       });
       if (typeof dispose === 'function') {
         const cleanup = () => { if (reviewerDisposers.delete(cleanup)) dispose(); };
