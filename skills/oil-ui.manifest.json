@@ -1,6 +1,6 @@
 {
   "name": "oil-ui",
-  "version": "0.34.2",
+  "version": "0.34.5",
   "source": {
     "description": "The source directory is supplied by the caller and is intentionally not recorded as a machine-specific path.",
     "rootSymlinkResolved": true
@@ -114,14 +114,14 @@
     },
     {
       "path": "README.md",
-      "sha256": "78ec4db67ada72b7940ac9f55f8979c740e7f785c893845684961ddc25f2a321",
-      "size": 14326,
+      "sha256": "566c9ed6d187539315d6f31023db445f5a98f114ef3d92d0e62adedce07fb29a",
+      "size": 14253,
       "mode": "0644"
     },
     {
       "path": "README.zh-CN.md",
-      "sha256": "f1ca5cfad0511b8b44e2220cf06b4d1c07c416d2f702bb591247176c5d804464",
-      "size": 13829,
+      "sha256": "bf331b3dbc1eff246444c9402c31870932f946004acab698f10e4ba55ffb548b",
+      "size": 13698,
       "mode": "0644"
     },
     {
@@ -138,8 +138,8 @@
     },
     {
       "path": "references/image-ideation.md",
-      "sha256": "f2add5110432a44bc58c29e24164c30798eb6c6213ab8fdf224a25de86c271a8",
-      "size": 20546,
+      "sha256": "fc50fdc822529dd44308fad90a833ffe61614d109006f6d20815c87abaedfe79",
+      "size": 22522,
       "mode": "0644"
     },
     {
@@ -156,8 +156,8 @@
     },
     {
       "path": "references/media.md",
-      "sha256": "b936d6ebfedab6f9683db0066a2a3baf7f0233dac0b8d174b90b7bda4cfb3a22",
-      "size": 20268,
+      "sha256": "569a121cc3f7abf1ed58e4ea07c21904329b72a743c03fff3f14c25e8adb4f78",
+      "size": 20361,
       "mode": "0644"
     },
     {
@@ -246,8 +246,8 @@
     },
     {
       "path": "scripts/check_update.py",
-      "sha256": "b6964662533467a9e976d129b772913c7e125538848fc834c08ed54982bc945c",
-      "size": 15876,
+      "sha256": "8a83b2afc3542ddd8a24d93cae3bdf6f1dad64ae46256c5b31c2c1a9f7f192d2",
+      "size": 22558,
       "mode": "0755"
     },
     {
@@ -276,8 +276,8 @@
     },
     {
       "path": "scripts/oiloil-image.mjs",
-      "sha256": "9def8ef07485436207db85a97f4a8b2a5b8ccd7b3d381547834cfcb7ed6d0164",
-      "size": 23069,
+      "sha256": "a801667705d8e500868b43ca6f082ca13ea0980bbc1fae673fd5aecf270b0766",
+      "size": 26431,
       "mode": "0755"
     },
     {
@@ -294,8 +294,8 @@
     },
     {
       "path": "SKILL.md",
-      "sha256": "30e12e779bfce5af9ada8b2e1d80536657ed5097720988f5b3ae64d091c57581",
-      "size": 13485,
+      "sha256": "278372197b8c3e2ecd1f20a6c2c7244610475284b906dd23359be11a06d303b6",
+      "size": 13345,
       "mode": "0644"
     },
     {
@@ -306,8 +306,8 @@
     },
     {
       "path": "tests/test_check_update.py",
-      "sha256": "e37f21dc5cd60c205a67849a7bdc5f99699ec993d0d66cb4178b35ce702e623a",
-      "size": 23176,
+      "sha256": "fa2b990f59256dcc23f6bc7e19c44de7adb982fa6fd4198cdeb51e4a61a96fbc",
+      "size": 26888,
       "mode": "0644"
     },
     {
@@ -324,8 +324,8 @@
     },
     {
       "path": "tests/test_oiloil_image.py",
-      "sha256": "a59a0e0cb66bcff4c81472c18e220cf5c07efea5b94ab78cb1115eda672c7c15",
-      "size": 33127,
+      "sha256": "7726a0e7eaf6bab48f861939919f4e51e5382dcaa3b1a583ef4dc11347f87535",
+      "size": 43915,
       "mode": "0644"
     },
     {
