@@ -2,7 +2,7 @@
 name: oil-ui
 description: "UI/UX design skill for Claude Code, Cursor, Codex & AI coding agents: design, refine, and review frontend interfaces for websites, apps, dashboards, and components with visual direction exploration, 3-direction side-by-side HTML comparison on request, DESIGN.md conflict checks, and real-browser screenshot & lightweight UX review. Defers to oil-ui-pro when installed. 设计、改进和评审网站、App、后台与组件的界面：探索设计方向、按需生成多风格同屏对比页、排查设计规范（DESIGN.md）冲突，并基于真实截图打磨视觉层级；按请求交付对比页、设计说明、设计稿或可运行界面。只负责设计判断，不用于纯业务逻辑、接口构建、无界面变化的代码整理，或改法已完全明确的日常修改（如改文案、调数量、删指定元素、复用现有样式，哪怕带有“优化”字样）。已安装 oil-ui-pro 时交给 oil-ui-pro。"
 metadata:
-  version: "0.34.5"
+  version: "0.34.6"
   compatibility: "通过 oil_ui_shoot、oil_ui_media、oil_ui_image、oil_ui_explorer、oil_ui_skill_status 与 read_image、subagent 完成截图取证、真实素材检索、AI 生图修图、对比页组装和独立视觉评审。"
 ---
 
@@ -23,7 +23,7 @@ Interface & UI/UX design workflow for AI coding agents — establishes a clear v
 - 回复、设计说明和交付说明用用户使用的语言；界面文案用产品面向用户的语言，没有说明时跟随用户。本 Skill 用中文写成，用户用英文时不要因此夹带中文。
 - 用户定下的品牌、参考、页面结构和交互约束优先。项目里的设计文档（包括 Agent 指令文件里写视觉的段落）彼此冲突或和代码对不上时，不强行同时满足，在方向确认时挑明打算按哪份做；没有确认环节时写进交付说明。分清用户要的是借鉴风格、重新设计还是精准还原，不自己换目标。
 - 设计说明、设计稿、原型和可运行的产品是不同的交付物：只要评审时不改文件，只要设计时不改业务代码。
-- 新建界面、多方向探索或存量重塑时，先静默探测生图能力：优先检查 `node <skill>/scripts/oiloil-image.mjs balance`（退出码为 0 且余额 ≥ 3 积分时作为优先推荐），其次看宿主原生生图工具。可用时在方向确认点合并问一次（走 Oil 积分时写明耗积分，有宿主原生工具可注为免积分备选）；无确认点时仅在已授权积分下走 Oil，未授权则用宿主生图或直接写代码。确定生图再读 [生图设计与还原校准](references/image-ideation.md)；无生图能力时不问，直接写代码。
+- 新建界面、多方向探索或存量重塑时，先静默读 `node <skill>/scripts/oiloil-image.mjs pref` 并探测宿主原生生图（`pref` 为 `host` 且宿主可用时直接跳过 `balance` 查询，其余情况再查 `oiloil-image.mjs balance`）：`pref` 为 `oiloil` 且已登录余额 ≥ 3 时直接沿用 `oiloil-image.mjs`（无需每轮重问授权），余额不足或登录失效时自动回退宿主原生生图并轻提示一次、不改偏好；`pref` 为 `host` 时直接用宿主原生生图（不再推 Oil 登录/积分），宿主无生图能力再按既有逻辑提示或直接写代码；`pref` 为 `unset` 时，双工具均可用（`oiloil` 已登录且余额 ≥ 3 且有宿主原生生图）则在方向确认点合并问一次让用户选并记住偏好——注明内置 Oil 耗积分但构图/参考图稳定性略好（余额不足自动回退宿主），宿主自带不耗 Oil 积分，选后运行 `pref set oiloil` 或 `pref set host`（随时可改口切换）；仅 `oiloil` 可用时在方向确认点写明耗积分待确认（不落盘偏好）；仅宿主可用时直接走宿主原生生图（不空问、不落盘偏好）；无确认点且未授权积分时走宿主生图或直接写代码。确定生图再读 [生图设计与还原校准](references/image-ideation.md)；无生图能力时不问，直接写代码。
 - 要留多方向候选、过程截图或中间素材时，位置按 [任务工作区](references/workdir.md)；直接实现单页或改现有代码时写目标文件，不预建过程目录。
 
 | 当前范围 | 怎么走 |
